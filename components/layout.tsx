@@ -30,6 +30,11 @@ const Layout: React.FC = ({
     setIsDarkTheme(isDarkMode)
   }, delay, true)
 
+  function handleThemeChange (isDarkMode: boolean) {
+    setDelay(null)
+    setIsDarkTheme(isDarkMode)
+  }
+
   return (
     <>
       <Head>
@@ -44,7 +49,7 @@ const Layout: React.FC = ({
           layout-header
         `}
       >
-        <LayoutHeader/>
+        <LayoutHeader isDarkMode={isDarkTheme} onThemeChange={handleThemeChange}/>
       </header>
       
       {/* 侧边栏 */}
