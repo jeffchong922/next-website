@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { RiArticleLine } from 'react-icons/ri'
 import MenuLink from './menu-link'
