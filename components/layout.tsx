@@ -1,7 +1,8 @@
 import Head from "next/head"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import useBoolean from "../hooks/useBoolean"
 import useInterval from "../hooks/useInterval"
+import webStorage from "../utils/web-storage"
 import LayoutHeader from "./layout-header"
 import LayoutMenu from "./layout-menu"
 
@@ -19,7 +20,8 @@ function isDarkModeHours (): boolean {
   return isDarkModeTime
 }
 
-const initialIntervalDelay = 10000
+const initialIntervalDelay = 2000
+const themeKey = 'theme-dark'
 
 const Layout: React.FC = ({
   children
@@ -28,14 +30,26 @@ const Layout: React.FC = ({
   const [isCloseMenu, setCloseMenu, setOpenMenu] = useBoolean(true)
   const [delay, setDelay] = useState<number | null>(initialIntervalDelay)
 
+  useEffect(() => {
+    const isDarkStr = webStorage.getItem(themeKey)
+    if (isDarkStr) {
+      setDelay(null)
+      isDarkStr === 'true'
+        ? setDarkTheme()
+        : setLightTheme()
+    }
+  }, [])
+
   useInterval(() => {
+    webStorage.setItem(themeKey, '' + isDarkModeHours())
     isDarkModeHours()
       ? setDarkTheme()
       : setLightTheme()
-  }, delay, true)
+  }, delay)
 
   function handleThemeChange (isDarkMode: boolean) {
     setDelay(null)
+    webStorage.setItem(themeKey, '' + isDarkMode)
     isDarkMode
       ? setDarkTheme()
       : setLightTheme()
