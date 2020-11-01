@@ -1,7 +1,9 @@
 import Head from "next/head"
 import { useState } from "react"
+import useBoolean from "../hooks/useBoolean"
 import useInterval from "../hooks/useInterval"
 import LayoutHeader from "./layout-header"
+import LayoutMenu from "./layout-menu"
 
 /**
  * 判断当前是否处在某个时间段
@@ -22,17 +24,27 @@ const initialIntervalDelay = 10000
 const Layout: React.FC = ({
   children
 }) => {
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false)
+  const [isDarkTheme, setDarkTheme, setLightTheme] = useBoolean(false)
+  const [isCloseMenu, setCloseMenu, setOpenMenu] = useBoolean(true)
   const [delay, setDelay] = useState<number | null>(initialIntervalDelay)
 
   useInterval(() => {
-    const isDarkMode = isDarkModeHours()
-    setIsDarkTheme(isDarkMode)
+    isDarkModeHours()
+      ? setDarkTheme()
+      : setLightTheme()
   }, delay, true)
 
   function handleThemeChange (isDarkMode: boolean) {
     setDelay(null)
-    setIsDarkTheme(isDarkMode)
+    isDarkMode
+      ? setDarkTheme()
+      : setLightTheme()
+  }
+
+  function handleMenuStatusChange () {
+    isCloseMenu
+      ? setOpenMenu()
+      : setCloseMenu()
   }
 
   return (
@@ -45,20 +57,22 @@ const Layout: React.FC = ({
       {/* 头部 */}
       <header
         className={`
-          fixed left-0 top-0 h-20 z-10 bg-black text-white px-8
+          fixed left-0 top-0 h-20 z-10 bg-black text-white
           layout-header
         `}
       >
-        <LayoutHeader isDarkMode={isDarkTheme} onThemeChange={handleThemeChange}/>
+        <LayoutHeader isCloseMenu={isCloseMenu} isDarkMode={isDarkTheme} onThemeChange={handleThemeChange} onMenuToggleClick={handleMenuStatusChange} />
       </header>
       
       {/* 侧边栏 */}
       <aside
         className={`
-          fixed left-0 inset-y-0 pt-20 bg-black text-white px-8
+          fixed left-0 inset-y-0 pt-20 bg-black text-white
           layout-aside
         `}
-      >侧边栏</aside>
+      >
+        <LayoutMenu/>
+      </aside>
 
       {/* 内容区 */}
       <main
@@ -72,6 +86,8 @@ const Layout: React.FC = ({
       <style jsx>{`
         .layout-header {
           width: 22rem;
+          padding-left: 2rem;
+          padding-right: 2rem;
         }
         .layout-aside {
           width: 22rem;
@@ -85,9 +101,13 @@ const Layout: React.FC = ({
             width: auto;
             height: 3rem;
             right: 0;
+            padding-left: 1rem;
+            padding-right: 1rem;
           }
           .layout-aside {
-            transform: translateX(-100%);
+            padding-top: 3rem;
+            width: 100vw;
+            transform: ${isCloseMenu ? 'translateX(-100%)' : 'translateX(0)'};
           }
           .layout-main {
             margin-left: 0;
