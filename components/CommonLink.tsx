@@ -28,7 +28,7 @@ const CommonLink: React.FC<CommonLinkProps> = ({
       }
       <style jsx>{`
         .common-link {
-          color: #4255ff;
+          color: #7078c1;
           text-decoration: underline;
         }
       `}</style>
