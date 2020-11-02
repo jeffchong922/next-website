@@ -28,7 +28,7 @@ export default function Home ({ links }: InferGetStaticPropsType<typeof getStati
     <Layout title='The Jeff'>
       {
         links.map(link => (
-          <DescBlock key={link.title} title={link.title}>
+          <DescBlock key={link.title} title={link.title} className='pb-6'>
             <NavLinks className='text-2xl lg:text-3xl' hrefList={link.links}/>
           </DescBlock>
         ))

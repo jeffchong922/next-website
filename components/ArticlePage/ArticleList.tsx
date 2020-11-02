@@ -25,7 +25,7 @@ const ArticleList: React.VFC<ArticleListProps> = ({
             {/* 遍历每一个文章信息 */}
             {
               articleList.map(article => (
-                <li key={article.id} className='flex flex-col text-2xl lg:text-3xl pb-4'>
+                <li key={article.id} className='flex flex-col text-2xl lg:text-3xl pb-6 lg:pb-12'>
                   {/* 链接 */}
                   <CommonLink href={`/articles/${article.id}`}>{article.title}</CommonLink>
                   {/* 描述 */}
