@@ -1,0 +1,31 @@
+[
+  {
+    "title": "站内导航",
+    "links":[
+      {
+        "href": "/articles",
+        "text": "My Articles"
+      }
+    ]
+  },
+  {
+    "title": "常用框架",
+    "links": [
+      {
+        "href": "https://zh-hans.reactjs.org/",
+        "text": "React",
+        "desc": "用于构建用户界面的 JavaScript 库"
+      },
+      {
+        "href": "https://cn.vuejs.org/",
+        "text": "Vue",
+        "desc": "渐进式 JavaScript 库"
+      },
+      {
+        "href": "https://nextjs.org/",
+        "text": "Next",
+        "desc": "The React Framework for Production"
+      }
+    ]
+  }
+]

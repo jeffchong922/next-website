@@ -1,11 +1,39 @@
-import P from '../components/HomePage/P'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import DescBlock from '../components/HomePage/DescBlock'
 import Layout from '../components/layout'
+import NavLinks from '../components/HomePage/NavLinks'
+import { getHomeLinksData } from '../lib/nav-links'
 
-export default function Home() {
+type Links = {
+  title: string,
+  links: {
+    href: string
+    text: string
+    desc?: string
+  }[]
+}[]
+
+export const getStaticProps: GetStaticProps<{links: Links}> = async () => {
+  const links = getHomeLinksData()
+  return {
+    props: {
+      links
+    },
+    revalidate: 1
+  }
+}
+
+export default function Home ({ links }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout title='The Jeff'>
-      <P>Welcome! I am Muri, and The Muratorium is the space I wanna devote to my YouTube Channel, where I push content for creative developers.</P>
-      <P>Welcome! I am Muri, and The Muratorium is the space I wanna devote to my YouTube Channel, where I push content for creative developers.</P>
+      {
+        links.map(link => (
+          <DescBlock key={link.title} title={link.title}>
+            <NavLinks className='text-2xl lg:text-3xl' hrefList={link.links}/>
+          </DescBlock>
+        ))
+      }
     </Layout>
   )
 }
+
