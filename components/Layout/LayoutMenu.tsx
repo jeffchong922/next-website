@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { RiArticleLine, RiLogoutBoxRLine } from 'react-icons/ri'
-import MenuLink from './menu-link'
+import MenuLink from './MenuLink'
 
 const LayoutMenu: React.VFC = () => {
   const { pathname } = useRouter()

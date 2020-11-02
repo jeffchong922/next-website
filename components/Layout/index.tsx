@@ -1,11 +1,12 @@
 import Head from "next/head"
 import Image from 'next/image'
 import { useState, useEffect } from "react"
-import useBoolean from "../hooks/useBoolean"
-import useInterval from "../hooks/useInterval"
-import webStorage from "../utils/web-storage"
-import LayoutHeader from "./layout-header"
-import LayoutMenu from "./layout-menu"
+import useBoolean from "../../hooks/useBoolean"
+import useInterval from "../../hooks/useInterval"
+import webStorage from "../../utils/web-storage"
+import LayoutHeader from "./LayoutHeader"
+import LayoutMenu from "./LayoutMenu"
+import { isDarkModeHours } from '../../utils/tools'
 
 interface LayoutProps {
   title: string
@@ -13,34 +14,28 @@ interface LayoutProps {
   bgImgSrc?: string
 }
 
-/**
- * 判断当前是否处在某个时间段
- */
-function isDarkModeHours (): boolean {
-  const currentHours = new Date().getHours()
-  let isDarkModeTime = false
-  
-  if (currentHours >= 21 || currentHours <= 6) {
-    isDarkModeTime = true
-  }
-
-  return isDarkModeTime
-}
-
 const initialIntervalDelay = 2000
 const themeKey = 'theme-dark'
 const defaultBgImgSrc = '/images/default-menu-bg.jpg'
 
 const Layout: React.FC<LayoutProps> = ({
-  bgImgSrc = defaultBgImgSrc,
+  bgImgSrc,
   title, subTitle,
   children
 }) => {
-  const [isImgError, setImgError] = useState(false)
+  const [imgSrc, setImgSrc] = useState<string>(defaultBgImgSrc)
   const [isDarkTheme, setDarkTheme, setLightTheme] = useBoolean(false)
   const [isCloseMenu, setCloseMenu, setOpenMenu] = useBoolean(true)
   const [delay, setDelay] = useState<number | null>(initialIntervalDelay)
 
+  // 监听背景图是否改变
+  useEffect(() => {
+    if (bgImgSrc) {
+      setImgSrc(bgImgSrc)
+    }
+  }, [bgImgSrc])
+
+  // 查看浏览器是否保存了主题
   useEffect(() => {
     const isDarkStr = webStorage.getItem(themeKey)
     if (isDarkStr) {
@@ -51,6 +46,7 @@ const Layout: React.FC<LayoutProps> = ({
     }
   }, [])
 
+  // 根据时间自动变换主题
   useInterval(() => {
     webStorage.setItem(themeKey, '' + isDarkModeHours())
     isDarkModeHours()
@@ -72,10 +68,6 @@ const Layout: React.FC<LayoutProps> = ({
       : setCloseMenu()
   }
 
-  function handleImageError () {
-    setImgError(true)
-  }
-
   return (
     <>
       <Head>
@@ -86,7 +78,9 @@ const Layout: React.FC<LayoutProps> = ({
       {/* 头部 */}
       <header
         className={`
-          fixed left-0 top-0 h-20 z-20 bg-black text-white
+          fixed left-0 top-0 z-20 bg-black text-white
+          transition-all duration-150
+          px-4 lg:px-8 h-12 lg:h-20
           layout-header
         `}
       >
@@ -96,7 +90,11 @@ const Layout: React.FC<LayoutProps> = ({
       {/* 侧边栏 */}
       <aside
         className={`
-          fixed left-0 inset-y-0 pt-20 bg-black text-white z-10
+          fixed left-0 inset-y-0 z-10 bg-black text-white
+          transition-all duration-300
+          transform ${isCloseMenu ? '-translate-x-full' : 'translate-x-0'}
+          lg:translate-x-0
+          pt-12 lg:pt-20
           layout-aside
         `}
       >
@@ -106,22 +104,21 @@ const Layout: React.FC<LayoutProps> = ({
       {/* 内容区 */}
       <main
         className={`
-          min-h-screen
+          min-h-screen pt-12 lg:pt-0
           layout-main
         `}
       >
-        {
-          // 地址错误将移除背景图
-          isImgError || <Image
-            className='object-cover'
-            src={bgImgSrc}
-            alt='content-image'
-            onError={handleImageError}
-            width={1920}
-            height={950}
-          />
-        }
+        {/* 图片 */}
+        <Image
+          className='object-cover'
+          src={imgSrc}
+          alt='content-image'
+          width={1920}
+          height={950}
+        />
+
         <div className='px-6 lg:px-10'>
+          {/* 内容标题 */}
           <div className='py-4 lg:py-6'>
             {
               subTitle && 
@@ -129,41 +126,37 @@ const Layout: React.FC<LayoutProps> = ({
             }
             <h1 className='font-bold text-3xl lg:text-5xl'>{title}</h1>
           </div>
+
           {children}
         </div>
       </main>
+
+
       <style jsx>{`
         .layout-header {
-          width: 22rem;
-          padding-left: 2rem;
-          padding-right: 2rem;
+          width: auto;
+          right: 0;
         }
         .layout-aside {
-          width: 22rem;
-          transition: all .3s;
+          width: 100vw;
         }
         .layout-main {
-          margin-left: 22rem;
+          margin-left: 0;
         }
-        @media screen and (max-width: 1024px) {
+        @media screen and (min-width: 1024px) {
           .layout-header {
-            width: auto;
-            height: 3rem;
-            right: 0;
-            padding-left: 1rem;
-            padding-right: 1rem;
+            width: 22rem;
           }
           .layout-aside {
-            padding-top: 3rem;
-            width: 100vw;
-            transform: ${isCloseMenu ? 'translateX(-100%)' : 'translateX(0)'};
+            width: 22rem;
           }
           .layout-main {
-            margin-left: 0;
-            padding-top: 3rem;
+            margin-left: 22rem;
           }
         }
       `}</style>
+      
+      {/* 主题切换关键地方 */}
       <style global jsx>{`
         html, body {
           background: ${isDarkTheme ? 'rgb(26, 32, 44)' : '#F4F4EE'};

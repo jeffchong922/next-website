@@ -45,3 +45,17 @@ export function fisherYates<T> (array: Array<T>): Array<T> {
 
   return copyArray
 }
+
+/**
+ * 判断当前是否处在某个时间段
+ */
+export function isDarkModeHours (): boolean {
+  const currentHours = new Date().getHours()
+  let isDarkModeTime = false
+  
+  if (currentHours >= 21 || currentHours <= 6) {
+    isDarkModeTime = true
+  }
+
+  return isDarkModeTime
+}

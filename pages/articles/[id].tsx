@@ -1,6 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
-import ArticleList from '../../components/ArticlePage/ArticleList'
-import Layout from '../../components/layout'
+import Layout from '../../components/Layout'
 import { getAllArticleIds, getArticleDataById } from '../../lib/articles'
 
 export type Query = {
@@ -11,6 +10,7 @@ export type ArticleProps = {
   articleInfo: {
     id: string
     title: string
+    image: string
     contentHtml: string
   }
 }
@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({ para
 
 export default function Article ({ articleInfo }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout title={articleInfo.title}>
+    <Layout title={articleInfo.title} bgImgSrc={articleInfo.image}>
       <article dangerouslySetInnerHTML={{ __html: articleInfo.contentHtml }}></article>
     </Layout>
   )

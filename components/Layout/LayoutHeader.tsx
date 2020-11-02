@@ -31,7 +31,7 @@ const LayoutHeader: React.VFC<LayoutHeaderProps> = ({
           transition: all .3s;
           color: rgb(177, 199, 214);
         }
-        @media screen and (min-width: 1025px) {
+        @media screen and (min-width: 1024px) {
           .menu-toggle {
             display: none;
           }

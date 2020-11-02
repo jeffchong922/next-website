@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import remark from 'remark'
 import html from 'remark-html'
+import highlight from 'remark-highlight.js'
 import { fisherYates } from '../utils/tools'
 
 const articlesDirectory = path.join(process.cwd(), 'data/articles')
@@ -56,15 +57,19 @@ export async function getArticleDataById (id: string) {
   const matterResult = matter(fileContents)
 
   const processContent = await remark()
+    .use(highlight)
     .use(html)
     .process(matterResult.content)
 
   const contentHtml = processContent.toString()
 
+  const { image, ...otherInfo } = matterResult.data
+  
   return {
     id,
     contentHtml,
     title: id,
-    ...matterResult.data
+    image: image ? image : '',
+    ...otherInfo
   }
 }
