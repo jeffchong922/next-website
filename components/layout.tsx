@@ -121,9 +121,14 @@ const Layout: React.FC<LayoutProps> = ({
             height={950}
           />
         }
-        <div className='p-6 lg:p-10'>
-          { subTitle && <small className='text-gray-700 uppercase font-bold'>{subTitle}</small>}
-          <h1 className='font-bold text-3xl lg:text-5xl'>{title}</h1>
+        <div className='px-6 lg:px-10'>
+          <div className='py-4 lg:py-6'>
+            {
+              subTitle && 
+              <small className='uppercase font-bold text-gray-600'>{subTitle}</small>
+            }
+            <h1 className='font-bold text-3xl lg:text-5xl'>{title}</h1>
+          </div>
           {children}
         </div>
       </main>
