@@ -1,10 +1,17 @@
 import Head from "next/head"
+import Image from 'next/image'
 import { useState, useEffect } from "react"
 import useBoolean from "../hooks/useBoolean"
 import useInterval from "../hooks/useInterval"
 import webStorage from "../utils/web-storage"
 import LayoutHeader from "./layout-header"
 import LayoutMenu from "./layout-menu"
+
+interface LayoutProps {
+  title: string
+  subTitle?: string
+  bgImgSrc?: string
+}
 
 /**
  * 判断当前是否处在某个时间段
@@ -22,10 +29,14 @@ function isDarkModeHours (): boolean {
 
 const initialIntervalDelay = 2000
 const themeKey = 'theme-dark'
+const defaultBgImgSrc = '/images/default-menu-bg.jpg'
 
-const Layout: React.FC = ({
+const Layout: React.FC<LayoutProps> = ({
+  bgImgSrc = defaultBgImgSrc,
+  title, subTitle,
   children
 }) => {
+  const [isImgError, setImgError] = useState(false)
   const [isDarkTheme, setDarkTheme, setLightTheme] = useBoolean(false)
   const [isCloseMenu, setCloseMenu, setOpenMenu] = useBoolean(true)
   const [delay, setDelay] = useState<number | null>(initialIntervalDelay)
@@ -61,6 +72,10 @@ const Layout: React.FC = ({
       : setCloseMenu()
   }
 
+  function handleImageError () {
+    setImgError(true)
+  }
+
   return (
     <>
       <Head>
@@ -71,7 +86,7 @@ const Layout: React.FC = ({
       {/* 头部 */}
       <header
         className={`
-          fixed left-0 top-0 h-20 z-10 bg-black text-white
+          fixed left-0 top-0 h-20 z-20 bg-black text-white
           layout-header
         `}
       >
@@ -81,7 +96,7 @@ const Layout: React.FC = ({
       {/* 侧边栏 */}
       <aside
         className={`
-          fixed left-0 inset-y-0 pt-20 bg-black text-white
+          fixed left-0 inset-y-0 pt-20 bg-black text-white z-10
           layout-aside
         `}
       >
@@ -95,7 +110,22 @@ const Layout: React.FC = ({
           layout-main
         `}
       >
-        {children}
+        {
+          // 地址错误将移除背景图
+          isImgError || <Image
+            className='object-cover'
+            src={bgImgSrc}
+            alt='content-image'
+            onError={handleImageError}
+            width={1920}
+            height={950}
+          />
+        }
+        <div className='p-6 lg:p-10'>
+          { subTitle && <small className='text-gray-700 uppercase font-bold'>{subTitle}</small>}
+          <h1 className='font-bold text-3xl lg:text-5xl'>{title}</h1>
+          {children}
+        </div>
       </main>
       <style jsx>{`
         .layout-header {

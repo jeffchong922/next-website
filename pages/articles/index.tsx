@@ -2,8 +2,7 @@ import Layout from '../../components/layout'
 
 export default function ArticleList () {
   return (
-    <Layout>
-      <div>文章列表</div>
+    <Layout title='Articles' subTitle='搜集整理的文档'>
     </Layout>
   )
 }
