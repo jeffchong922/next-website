@@ -7,10 +7,12 @@ const theme: Theme = {
     text: '#2d3748',
     background: '#fff',
     themeIcon: '#ecc94b',
+    primary: '#3861DD',
     modes: {
       deep: {
         text: '#F0F5FA',
-        background: '#222639'
+        background: '#222639',
+        primary: '#87A8F4'
       }
     }
   },
@@ -175,9 +177,36 @@ const theme: Theme = {
       width: '5', height: '5',
       top: 0, bottom: 0, left: 0, my: 'auto',
       borderRadius: 'full',
-      transition: 'all .5s'
+      transition: 'all .5s',
     }
-  }
+  },
+  links: {
+    nav: {
+      position: 'relative',
+      display: 'inline-block',
+      cursor: 'pointer',
+      transition: 'color .3s ease-out 0s',
+      "&::after": {
+        content: 'close-quote',
+        position: 'absolute',
+        display: 'block',
+        top: 0,
+        left: 0,
+        // zIndex: -1,
+        p: '.8rem',
+        width: 'full',
+        height: 'full',
+        border: '1px solid #000',
+        borderColor: 'text',
+        transformOrigin: '0px 50%',
+        transform: 'translate(-.8rem, -.8rem) scaleX(0)',
+        transition: 'transform .3s ease-out 0s',
+      },
+      "&:hover::after": {
+        transform: 'translate(-.8rem, -.8rem)'
+      },
+    }
+  },
 }
 
 export default theme
