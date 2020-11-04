@@ -1,13 +1,16 @@
+import { Container } from 'theme-ui'
 import LayoutHeader from "./LayoutHeader"
 
 const Layout: React.FC = ({
   children
 }) => {
   return (
-    <div>
+    <>
       <LayoutHeader/>
-      {children}
-    </div>
+      <Container>
+        {children}
+      </Container>
+    </>
   )
 }
 

@@ -144,7 +144,10 @@ const theme: Theme = {
     "10/12": "83.333333%",
     "11/12": "91.666667%",
     "screenHeight": "100vh",
-    "screenWidth": "100vw"
+    "screenWidth": "100vw",
+
+    /* Container Component max-width */
+    container: '1920px',
   },
   borderWidths: { /* 边框大小 */
     "0": "0",
@@ -160,6 +163,22 @@ const theme: Theme = {
     md: "0.375rem",
     lg: "0.5rem",
     full: "9999px"
+  },
+  breakpoints: [
+    '768px', '1024px', '1280px',
+  ],
+  layout: {
+    container: {
+      pt: '20',
+    },
+    header: {
+      position: 'fixed',
+      top: 0, left: 0, right: 0,
+      height: '20',
+      '& > *': {
+        height: 'full'
+      }
+    },
   },
   grids: {
     themeToggle: {
