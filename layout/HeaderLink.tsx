@@ -1,5 +1,3 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
 import React from 'react'
 import Link from 'next/link'
 import { jsx, NavLink } from 'theme-ui'
@@ -14,9 +12,11 @@ const HeaderLink: React.FC<HeaderLinkProps> = ({
 }) => {
   return (
     <Link href={href}>
-      <NavLink>
-        {children}
-      </NavLink>
+      <a style={{ color: 'inherit' }}>
+        <NavLink as='div'>
+          {children}
+        </NavLink>
+      </a>
     </Link>
   )
 }
