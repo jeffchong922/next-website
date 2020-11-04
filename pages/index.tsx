@@ -1,5 +1,9 @@
+import Layout from "../layout";
+
 export default function Home () {
   return (
-    <div>Hello Nextjs</div>
+    <Layout>
+      content
+    </Layout>
   )
 }
