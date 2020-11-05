@@ -21,6 +21,20 @@ const theme: Theme = {
       }
     }
   },
+  fonts: {
+    body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    heading: 'inherit',
+    monospace: 'Menlo, monospace'
+  },
+  fontWeights: {
+    body: 400,
+    heading: 700,
+    bold: 700
+  },
+  lineHeights: {
+    body: 1.5,
+    heading: 1.125
+  },
   fontSizes: { /* 字体大小 */
     xs: "12px",
     sm: "14px",
@@ -301,8 +315,52 @@ const theme: Theme = {
     },
   },
   styles: {
+    root: {
+      fontFamily: 'body',
+      lineHeight: 'body',
+      fontWeight: 'body'
+    },
+    p: {
+      color: 'text',
+      fontFamily: 'body',
+      fontWeight: 'body',
+      lineHeight: 'body',
+      'code': {
+        color: 'background', bg: 'text',
+        p: '1',
+        borderRadius: 'default'
+      }
+    },
+    a: {
+      color: 'primary'
+    },
     pre: {
-      ...dracula
+      ...dracula,
+      fontFamily: "monospace",
+      p: '1em',
+      overflow: 'auto',
+      fontSize: '1.12em', borderRadius: '0.3rem',
+      '.token-line': {
+        lineHeight: '1.5em',
+      },
+    },
+    table: {
+      width: "full",
+      borderCollapse: "separate",
+      borderSpacing: 0
+    },
+    th: {
+      textAlign: "left",
+      borderWidth: 'px',
+      borderBottomStyle: "solid"
+    },
+    td: {
+      textAlign: "left",
+      borderWidth: 'px',
+      borderBottomStyle: "solid"
+    },
+    img: {
+      maxWidth: 'full',
     }
   }
 }
