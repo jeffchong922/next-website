@@ -16,7 +16,7 @@ const FlexGrid: React.FC<FlexGridProps> = ({
   resources
 }) => {
   return (
-    <Flex sx={{ flexWrap: 'wrap' }}>
+    <Flex sx={{ flexWrap: 'wrap', bg: 'muted' }}>
       {
         resources.map(resource => (
           <Box key={resource.id} sx={{ width: ['full', '1/2', '1/3'], variant: 'cards.flexGridBox' }}>
