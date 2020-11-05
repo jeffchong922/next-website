@@ -1,6 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import emoji from 'remark-emoji'
+import remarkSubSuper  from 'remark-sub-super'
+import remarkTypograf from '@mavrin/remark-typograf'
+import footnotes from 'remark-footnotes'
+import remarkAbbr from 'remark-abbr'
 import renderToString from 'next-mdx-remote/render-to-string'
 import makeComponents from '../config/mdxComponents'
 
@@ -62,7 +67,23 @@ export async function getArticleById (id: string) {
   const mdxSource = await renderToString(content, {
     components: makeComponents(localComponents),
     mdxOptions: {
-      remarkPlugins: []
+      remarkPlugins: [
+        /* 字符表情 */
+        [emoji, {
+          emoticon: true
+        }],
+        /* sup & sub */
+        remarkSubSuper,
+        /* 商标类 */
+        [remarkTypograf, {
+          locale: ['en-US']
+        }],
+        /*  */
+        [footnotes, {
+          inlineNotes: true
+        }],
+        remarkAbbr
+      ]
     },
     scope: data
   })

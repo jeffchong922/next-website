@@ -1,4 +1,5 @@
 import { Theme } from "theme-ui";
+import { dracula } from "../data/prism-presets";
 
 const theme: Theme = {
   initialColorModeName: 'light',
@@ -298,6 +299,11 @@ const theme: Theme = {
       textTransform: 'uppercase',
       transition: 'color .3s linear 0s',
     },
+  },
+  styles: {
+    pre: {
+      ...dracula
+    }
   }
 }
 

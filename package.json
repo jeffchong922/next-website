@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@mavrin/remark-typograf": "^2.1.6",
     "gray-matter": "^4.0.2",
     "next": "10.0.0",
     "next-mdx-remote": "^1.0.0",
@@ -15,6 +16,10 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-icons": "^3.11.0",
+    "remark-abbr": "^1.4.0",
+    "remark-emoji": "^2.1.0",
+    "remark-footnotes": "^3.0.0",
+    "remark-sub-super": "^1.0.19",
     "theme-ui": "^0.3.1"
   },
   "devDependencies": {
