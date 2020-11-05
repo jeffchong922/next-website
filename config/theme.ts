@@ -169,13 +169,18 @@ const theme: Theme = {
   breakpoints: [
     '768px', '1024px', '1280px',
   ],
+  zIndices: [
+    0, 1, 9, 99, 999, 9999
+  ],
   layout: {
     container: {
       pt: '20',
     },
     header: {
+      bg: 'background',
       position: 'fixed',
       top: 0, left: 0, right: 0,
+      zIndex: 3,
       height: '20',
       '& > *': {
         height: 'full'
