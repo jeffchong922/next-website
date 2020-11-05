@@ -1,12 +1,14 @@
 import React from 'react'
 import { Box, Flex } from 'theme-ui'
 
+export type Resource = {
+  id: string
+  [props: string]: any
+}
+
 export type FlexGridProps = {
   RenderItem: (props) => React.ReactElement
-  resources: {
-    id: string
-    [props: string]: any
-  }[]
+  resources: Resource[]
 }
 
 const FlexGrid: React.FC<FlexGridProps> = ({
@@ -17,7 +19,7 @@ const FlexGrid: React.FC<FlexGridProps> = ({
     <Flex sx={{ flexWrap: 'wrap' }}>
       {
         resources.map(resource => (
-          <Box key={resource.id} sx={{ width: ['full', '1/2', '1/3'] }}>
+          <Box key={resource.id} sx={{ width: ['full', '1/2', '1/3'], variant: 'cards.flexGridBox' }}>
             <RenderItem {...resource}/>
           </Box>
         ))

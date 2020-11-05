@@ -8,11 +8,13 @@ const theme: Theme = {
     background: '#fff',
     themeIcon: '#ecc94b',
     primary: '#3861DD',
+    muted: '#E2E8F0',
     modes: {
       deep: {
         text: '#F0F5FA',
         background: '#222639',
-        primary: '#87A8F4'
+        primary: '#87A8F4',
+        muted: '#2D3748',
       }
     }
   },
@@ -226,6 +228,43 @@ const theme: Theme = {
       },
     }
   },
+  cards: {
+    flexGridBox: {
+      bg: 'background',
+      transition: 'all .3s ease-out 0s',
+      // 边框样式 -----
+      borderColor: 'text', borderWidth: 'px',
+      borderBottomStyle: 'solid',
+      ":nth-of-type(odd)": {
+        borderRightStyle: ['unset', 'solid', 'solid']
+      },
+      ":nth-of-type(even)": {
+        borderRightStyle: ['unset', 'unset', 'solid']
+      },
+      ":nth-of-type(3n)": {
+        borderRightStyle: [null, null, 'unset']
+      },
+      // --------------
+      ":hover": {
+        bg: 'muted'
+      }
+    }
+  },
+  text: {
+    flexGridTitle: {
+      color: 'text',
+      fontSize: ['xl', '2xl', '3xl'],
+      fontWeight: 'bold',
+      transition: 'color .3s linear 0s',
+    },
+    flexGridSubTitle: {
+      color: 'text',
+      fontSize: ['xs', 'sm', 'md'],
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      transition: 'color .3s linear 0s',
+    },
+  }
 }
 
 export default theme

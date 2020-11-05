@@ -1,0 +1,19 @@
+[
+  {
+    "category": "🚀 前端框架",
+    "items": [
+      {
+        "href": "https://react.docschina.org/",
+        "icon": "/images/react-logo.png",
+        "name": "React",
+        "desc": "用于构建用户界面的 JavaScript 库"
+      },
+      {
+        "href": "https://cn.vuejs.org/",
+        "icon": "/images/vue-logo.png",
+        "name": "Vue",
+        "desc": "渐进式 JavaScript 框架"
+      }
+    ]
+  }
+]
