@@ -6,7 +6,7 @@ export type PageInfo = {
 const Pages: PageInfo[] = [
   {
     path: '/articles',
-    name: '博客内容'
+    name: '记录'
   },
   {
     path: '/favorite',

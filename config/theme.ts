@@ -9,12 +9,14 @@ const theme: Theme = {
     themeIcon: '#ecc94b',
     primary: '#3861DD',
     muted: '#E2E8F0',
+    highlight: '#3366FF',
     modes: {
       deep: {
         text: '#F0F5FA',
         background: '#222639',
         primary: '#87A8F4',
         muted: '#2D3748',
+        highlight: '#ADC8FF',
       }
     }
   },
@@ -204,6 +206,33 @@ const theme: Theme = {
       top: 0, bottom: 0, left: 0, my: 'auto',
       borderRadius: 'full',
       transition: 'all .5s',
+    },
+    resourceNav: {
+      position: 'relative',
+      zIndex: 1,
+      display: 'block',
+      width: 'full', p: 0,
+      bg: 'background', color: 'text', fontWeight: 'bold',
+      borderRadius: 'none',
+      fontSize: 'xl',
+      outline: 'none', cursor: 'pointer',
+      transition: 'color .125s linear 0s',
+      "::before": {
+        content: 'close-quote',
+        position: 'absolute',
+        top: 0, left: 0, right: 0, bottom: 0,
+        bg: 'highlight',
+        zIndex: -1,
+        transformOrigin: '0px 50%',
+        transform: 'scaleX(0)',
+        transition: 'transform .125s linear 0s',
+      },
+      ":hover::before": {
+        transform: 'scaleX(1)',
+      },
+      ":hover": {
+        color: 'background',
+      },
     }
   },
   links: {
