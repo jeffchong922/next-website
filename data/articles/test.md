@@ -1,5 +1,6 @@
 ---
 title: Hello World
+tags: ['a', 'b', 'c', 'd']
 ---
 
 
