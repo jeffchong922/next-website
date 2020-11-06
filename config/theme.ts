@@ -5,7 +5,7 @@ const theme: Theme = {
   initialColorModeName: 'light',
   useColorSchemeMediaQuery: true,
   colors: { /* 主体样式 */
-    text: '#2d3748',
+    text: '#282C35',
     background: '#fff',
     themeIcon: '#ecc94b',
     primary: '#3861DD',
@@ -14,7 +14,7 @@ const theme: Theme = {
     modes: {
       deep: {
         text: '#F0F5FA',
-        background: '#222639',
+        background: '#282C35',
         primary: '#87A8F4',
         muted: '#2D3748',
         highlight: '#ADC8FF',
@@ -263,17 +263,17 @@ const theme: Theme = {
         top: 0,
         left: 0,
         // zIndex: -1,
-        p: '.8rem',
+        p: '.7rem',
         width: 'full',
         height: 'full',
         border: '1px solid #000',
         borderColor: 'text',
         transformOrigin: '0px 50%',
-        transform: 'translate(-.8rem, -.8rem) scaleX(0)',
+        transform: 'translate(-.7rem, -.7rem) scaleX(0)',
         transition: 'transform .3s ease-out 0s',
       },
       "&:hover::after": {
-        transform: 'translate(-.8rem, -.8rem)'
+        transform: 'translate(-.7rem, -.7rem)'
       },
     }
   },
@@ -318,28 +318,53 @@ const theme: Theme = {
     root: {
       fontFamily: 'body',
       lineHeight: 'body',
-      fontWeight: 'body'
+      fontWeight: 'body',
+      transition: 'color .3s linear',
+      textSizeAdjust: '100%',
+    },
+    h2: {
+      fontFamily: 'heading',
+      fontWeight: 'body',
+      lineHeight: 'heading',
+      m: 0,
+      mb: '8',
+      fontSize: '3xl',
+      mt: '16'
+    },
+    h3: {
+      fontFamily: 'heading',
+      fontWeight: 'body',
+      lineHeight: 'heading',
+      m: 0,
+      mb: '8',
+      fontSize: '2xl',
+      mt: '12'
+    },
+    h4: {
+      fontFamily: 'heading',
+      fontWeight: 'body',
+      lineHeight: 'heading',
+      m: 0,
+      mb: '8',
+      fontSize: 'xl',
+      mt: '10'
     },
     p: {
       color: 'text',
-      fontFamily: 'body',
+      fontFamily: 'monospace',
       fontWeight: 'body',
       lineHeight: 'body',
-      'code': {
-        color: 'background', bg: 'text',
-        p: '1',
-        borderRadius: 'default'
-      }
+      my: '8', wordSpacing: '-.2rem'
     },
     a: {
-      color: 'primary'
+      color: '#736598'
     },
     pre: {
       ...dracula,
-      fontFamily: "monospace",
+      bg: '#011627',
       p: '1em',
       overflow: 'auto',
-      fontSize: '1.12em', borderRadius: '0.3rem',
+      borderRadius: '0.3rem',
       '.token-line': {
         lineHeight: '1.5em',
       },
@@ -361,6 +386,26 @@ const theme: Theme = {
     },
     img: {
       maxWidth: 'full',
+    },
+    inlineCode: {
+      color: 'text', bg: 'muted',
+      p: '1',
+      borderRadius: 'default'
+    },
+    hr: {
+      border: 'none',
+      height: 'px',
+      bg: 'text',
+      m: '8',
+    },
+    ol: {
+      pl: '6',
+    },
+    ul: {
+      pl: '6',
+    },
+    li: {
+      my: '4'
     }
   }
 }

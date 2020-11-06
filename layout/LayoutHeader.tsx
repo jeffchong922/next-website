@@ -1,10 +1,17 @@
 import { Flex, Box, Text } from 'theme-ui'
 import BBBox from '../components/shared/BBBox'
 import Pages from '../config/pages'
+import ArticleProgress from './ArticleProgress'
 import HeaderLink from './HeaderLink'
 import ThemeToggle from './ThemeToggle'
 
-const LayoutHeader: React.FC = () => {
+export type LayoutHeaderProps = {
+  showArticleProgress?: boolean
+}
+
+const LayoutHeader: React.FC<LayoutHeaderProps> = ({
+  showArticleProgress
+}) => {
   return (
     <Box sx={{ variant: 'layout.header' }}>
       <BBBox>
@@ -42,6 +49,10 @@ const LayoutHeader: React.FC = () => {
           </Flex>
         </Flex>
       </BBBox>
+
+      {/* 文本进度条 */}
+      { showArticleProgress && <ArticleProgress/>}
+
     </Box>
   )
 }

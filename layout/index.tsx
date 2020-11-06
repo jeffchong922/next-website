@@ -1,14 +1,27 @@
-import { Container } from 'theme-ui'
+import { Box, Container } from 'theme-ui'
 import LayoutHeader from "./LayoutHeader"
+import ArticleProgress from './ArticleProgress'
 
-const Layout: React.FC = ({
-  children
+export type LayoutProps = {
+  showArticleProgress?: boolean
+}
+
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  showArticleProgress
 }) => {
   return (
     <>
-      <LayoutHeader/>
+      <LayoutHeader showArticleProgress={showArticleProgress}/>
       <Container>
-        {children}
+        {/* 适配文本进度条 */}
+        <Box
+          sx={{
+            pt: showArticleProgress ? '1' : '0'
+          }}
+        >
+          {children}
+        </Box>
       </Container>
     </>
   )
