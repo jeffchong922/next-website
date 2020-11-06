@@ -33,6 +33,8 @@ export function getAllArticle () {
       articleTags = typeof tags === 'string'
         ? [tags]
         : tags
+    } else {
+      articleTags.push('NO TAG')
     }
 
     return {
@@ -129,10 +131,53 @@ export function getAllTag () {
       articleTags = typeof tags === 'string'
         ? [tags]
         : tags
+    } else {
+      articleTags.push('NO TAG')
     }
 
     return articleTags
   })
 
   return flatten<string>(tagsList)
+}
+
+export function getArticlesByTag (tag: string) {
+  const filePaths = fs.readdirSync(ARTICLES_DIRECTORY)
+    .filter(articlePathFilter)
+
+  const articleList = filePaths.map(filePath => {
+    const id = filePath.replace(/\.mdx?$/, '')
+    
+    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, filePath), 'utf-8')
+
+    const { data } = matter(source)
+    const { title, tags } = data
+
+    let articleTags: string[] = []
+    if (tags) {
+      articleTags = typeof tags === 'string'
+        ? [tags]
+        : tags
+    } else {
+      articleTags.push('NO TAG')
+    }
+
+    return {
+      id,
+      title: title ? title : id,
+      tags: articleTags
+    }
+  })
+
+  const filteredList = articleList.filter(({ tags }) => {
+    const searchTag = formatTag(tag)
+    const articleTags = tags.map(formatTag)
+    return ~articleTags.indexOf(searchTag)
+  })
+
+  return filteredList
+}
+
+function formatTag (tag: string) {
+  return tag.split(' ').join('-').toLocaleLowerCase().trim()
 }
