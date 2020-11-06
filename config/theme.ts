@@ -229,7 +229,7 @@ const theme: Theme = {
       width: 'full', p: 0,
       bg: 'background', color: 'text', fontWeight: 'bold',
       borderRadius: 'none',
-      fontSize: 'xl',
+      fontSize: 'base',
       outline: 'none', cursor: 'pointer',
       transition: 'color .125s linear 0s',
       "::before": {

@@ -8,6 +8,7 @@ import footnotes from 'remark-footnotes'
 import remarkAbbr from 'remark-abbr'
 import renderToString from 'next-mdx-remote/render-to-string'
 import makeComponents from '../config/mdxComponents'
+import { flatten } from '../helpers/fp'
 
 const ARTICLES_DIRECTORY = path.join(process.cwd(), 'data/articles')
 
@@ -111,4 +112,27 @@ export function getLocalComponentsFromMdxContent (content: string): string[] {
 
 export function isFileExist (fileName: string) {
   return fs.existsSync(path.join(ARTICLES_DIRECTORY, fileName))
+}
+
+export function getAllTag () {
+  const filePaths = fs.readdirSync(ARTICLES_DIRECTORY)
+    .filter(articlePathFilter)
+
+  const tagsList = filePaths.map(filePath => {
+    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, filePath), 'utf-8')
+
+    const { data } = matter(source)
+    const { tags } = data
+
+    let articleTags: string[] = []
+    if (tags) {
+      articleTags = typeof tags === 'string'
+        ? [tags]
+        : tags
+    }
+
+    return articleTags
+  })
+
+  return flatten<string>(tagsList)
 }

@@ -9,6 +9,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getAllArticle } from '../../libs/articles'
 import FlexGrid from '../../components/shared/FlexGrid'
 import Card from '../../components/ArticlesPage/Card'
+import HighlightLink from '../../components/shared/HighlightLink'
 
 export type Article = {
   id: string
@@ -58,6 +59,8 @@ const Articles = ({
         leftClick={() => alert(1)}
         rightClick={() => alert(2)}
       />
+
+      <HighlightLink href='/tags'>通过标签查询</HighlightLink>
     </Layout>
   )
 }
