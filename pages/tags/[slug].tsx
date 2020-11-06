@@ -5,11 +5,9 @@ import Layout from '../../layout'
 import { getAllTag, getArticlesByTag } from '../../libs/articles'
 import makeDocTitle from '../../helpers/doc-title'
 import ResourceTitle from '../../components/shared/ResourceTitle'
-import FlexGrid from '../../components/shared/FlexGrid'
-import NoResource from '../../components/ArticlesPage/NoResource'
-import Card from '../../components/ArticlesPage/Card'
 import HighlightLink from '../../components/shared/HighlightLink'
 import { transformTagForLink, transformTagForShow } from '../../helpers/tag'
+import ShowArticles from '../../components/ArticlesPage/ShowArticles'
 
 export type Query = {
   slug: string
@@ -63,11 +61,7 @@ const TagRelated = ({
 
       <ResourceTitle>🔗 {tag} ({articles.length} total)</ResourceTitle>
 
-      {
-        articles.length <= 0
-          ? <NoResource/>
-          : <FlexGrid RenderItem={Card} resources={articles}/>
-      }
+      <ShowArticles articles={articles}/>
 
       <HighlightLink href='/tags'>全部标签</HighlightLink>
     </Layout>
