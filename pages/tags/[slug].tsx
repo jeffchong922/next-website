@@ -9,6 +9,7 @@ import FlexGrid from '../../components/shared/FlexGrid'
 import NoResource from '../../components/ArticlesPage/NoResource'
 import Card from '../../components/ArticlesPage/Card'
 import HighlightLink from '../../components/shared/HighlightLink'
+import { transformTagForLink, transformTagForShow } from '../../helpers/tag'
 
 export type Query = {
   slug: string
@@ -26,7 +27,7 @@ export type TagRelatedProps = {
 }
 
 export const getStaticPaths: GetStaticPaths<Query> = async () => {
-  const tags = getAllTag().map(tag => tag.toLocaleLowerCase().split(' ').join('-')).sort().filter((tag, idx, tags) => tag !== tags[idx+1])
+  const tags = getAllTag().map(transformTagForLink).sort().filter((tag, idx, tags) => tag !== tags[idx+1])
   const paths = tags.map(tag => ({
     params: {
       slug: tag
@@ -44,7 +45,7 @@ export const getStaticProps: GetStaticProps<TagRelatedProps, Query> = async ({
   const articles = getArticlesByTag(params.slug)
   return {
     props: {
-      tag: params.slug.split('-').join(' ').trim(),
+      tag: transformTagForShow(params.slug),
       articles
     }
   }

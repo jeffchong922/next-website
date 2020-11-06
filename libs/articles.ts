@@ -9,6 +9,7 @@ import remarkAbbr from 'remark-abbr'
 import renderToString from 'next-mdx-remote/render-to-string'
 import makeComponents from '../config/mdxComponents'
 import { flatten } from '../helpers/fp'
+import { transformTagForLink } from '../helpers/tag'
 
 const ARTICLES_DIRECTORY = path.join(process.cwd(), 'data/articles')
 
@@ -16,14 +17,18 @@ function articlePathFilter (path: string) {
   return /\.mdx?/.test(path)
 }
 
-export function getAllArticle () {
-  const filePaths = fs.readdirSync(ARTICLES_DIRECTORY)
-    .filter(articlePathFilter)
+function getAllArticleNames () {
+  return fs.readdirSync(ARTICLES_DIRECTORY)
+  .filter(articlePathFilter)
+}
 
-  const articleList = filePaths.map(filePath => {
-    const id = filePath.replace(/\.mdx?$/, '')
+function getArticlesList () {
+  const fileNames = getAllArticleNames()
+
+  return fileNames.map(fileName => {
+    const id = fileName.replace(/\.mdx?$/, '')
     
-    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, filePath), 'utf-8')
+    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, fileName), 'utf-8')
 
     const { data } = matter(source)
     const { title, tags } = data
@@ -43,14 +48,14 @@ export function getAllArticle () {
       tags: articleTags
     }
   })
+}
 
-  return articleList
+export function getAllArticle () {
+  return getArticlesList()
 }
 
 export function getAllArticleIds () {
-  return fs.readdirSync(ARTICLES_DIRECTORY)
-    .filter(articlePathFilter)
-    .map(filePath => filePath.replace(/\.mdx?$/, ''))
+  return getAllArticleNames().map(fileName => fileName.replace(/\.mdx?$/, ''))
 }
 
 export async function getArticleById (id: string) {
@@ -117,67 +122,19 @@ export function isFileExist (fileName: string) {
 }
 
 export function getAllTag () {
-  const filePaths = fs.readdirSync(ARTICLES_DIRECTORY)
-    .filter(articlePathFilter)
-
-  const tagsList = filePaths.map(filePath => {
-    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, filePath), 'utf-8')
-
-    const { data } = matter(source)
-    const { tags } = data
-
-    let articleTags: string[] = []
-    if (tags) {
-      articleTags = typeof tags === 'string'
-        ? [tags]
-        : tags
-    } else {
-      articleTags.push('NO TAG')
-    }
-
-    return articleTags
-  })
-
+  const articleList = getArticlesList()
+  const tagsList = articleList.map(article => article.tags)
   return flatten<string>(tagsList)
 }
 
 export function getArticlesByTag (tag: string) {
-  const filePaths = fs.readdirSync(ARTICLES_DIRECTORY)
-    .filter(articlePathFilter)
-
-  const articleList = filePaths.map(filePath => {
-    const id = filePath.replace(/\.mdx?$/, '')
-    
-    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, filePath), 'utf-8')
-
-    const { data } = matter(source)
-    const { title, tags } = data
-
-    let articleTags: string[] = []
-    if (tags) {
-      articleTags = typeof tags === 'string'
-        ? [tags]
-        : tags
-    } else {
-      articleTags.push('NO TAG')
-    }
-
-    return {
-      id,
-      title: title ? title : id,
-      tags: articleTags
-    }
-  })
+  const articleList = getArticlesList()
 
   const filteredList = articleList.filter(({ tags }) => {
-    const searchTag = formatTag(tag)
-    const articleTags = tags.map(formatTag)
+    const searchTag = transformTagForLink(tag)
+    const articleTags = tags.map(transformTagForLink)
     return ~articleTags.indexOf(searchTag)
   })
 
   return filteredList
-}
-
-function formatTag (tag: string) {
-  return tag.split(' ').join('-').toLocaleLowerCase().trim()
 }
