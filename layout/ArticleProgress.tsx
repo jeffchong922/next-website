@@ -12,6 +12,10 @@ const ArticleProgress = () => {
   // 计算最大值
   useEffect(() => {
     const maxVal = bodyOffsetHeight - innerHeight
+    if (!bodyOffsetHeight) {
+      setMax(1)
+      setValue(1)
+    }
     setMax(maxVal)
   }, [innerHeight, bodyOffsetHeight])
 
