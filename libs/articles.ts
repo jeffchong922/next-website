@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import emoji from 'remark-emoji'
@@ -9,66 +8,121 @@ import remarkAbbr from 'remark-abbr'
 import renderToString from 'next-mdx-remote/render-to-string'
 import makeComponents from '../config/mdxComponents'
 import { flatten } from '../helpers/fp'
-import { transformTagForLink } from '../helpers/tag'
+import makeFileTools from '../helpers/file-tools'
+import { transformStrForLink } from '../helpers/name-link'
 
+export type ArticleMatter = {
+  title?: string
+  tags?: string[] | string
+  date?: string
+  desc?: string
+}
+
+export type ArticleInfo = {
+  id: string
+  title: string
+  tags: string[]
+  date: string
+  desc: string
+  content: string
+}
+
+export type MdxArticle = {
+  errMsg?: string
+  data?: ArticleInfo & {
+    mdxSource: any
+    localComponents: string[]
+  }
+}
+
+// 文章文件存放路径
 const ARTICLES_DIRECTORY = path.join(process.cwd(), 'data/articles')
 
-function articlePathFilter (path: string) {
-  return /\.mdx?/.test(path)
+const fileTools = makeFileTools(ARTICLES_DIRECTORY)
+
+/**
+ * 文章文件过滤
+ * @param fileName 文件名
+ */
+function articleFileFilter (fileName: string) {
+  return /\.mdx?$/.test(fileName)
 }
 
+/**
+ * 从文件名获取相应id值
+ * @param fileName 文件名
+ */
+function getArticleId (fileName: string) {
+  return fileName.replace(/\.mdx?$/, '')
+}
+
+/**
+ * 获取所有文章文件名
+ */
 function getAllArticleNames () {
-  return fs.readdirSync(ARTICLES_DIRECTORY)
-  .filter(articlePathFilter)
+  return fileTools.getAllFileNames()
+  .filter(articleFileFilter)
 }
 
-function getArticlesList () {
+/**
+ * 获取所有文章信息
+ */
+function getAllArticleInfos (): ArticleInfo[] {
   const fileNames = getAllArticleNames()
 
   return fileNames.map(fileName => {
-    const id = fileName.replace(/\.mdx?$/, '')
+    const id = getArticleId(fileName)
     
-    const source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, fileName), 'utf-8')
+    const source = fileTools.getFileSource(fileName)
 
-    const { data } = matter(source)
-    const { title, tags } = data
+    const { data, content } = matter(source)
+    const { title, tags, date, desc } = data as ArticleMatter
 
     let articleTags: string[] = []
     if (tags) {
-      articleTags = typeof tags === 'string'
-        ? [tags]
-        : tags
-    } else {
+      typeof tags === 'string'
+        ? articleTags.push(tags)
+        : articleTags.push(...tags)
+    }
+    else {
       articleTags.push('NO TAG')
     }
 
+    let dateJson = new Date(date).toJSON()
+    if (!dateJson) {
+      dateJson = new Date().toJSON()
+    }
+
     return {
-      id,
-      title: title ? title : id,
-      tags: articleTags
+      id: transformStrForLink(id),
+      title: title || id,
+      tags: articleTags,
+      date: dateJson,
+      desc: desc || '没有找到相关描述',
+      content
     }
   })
 }
 
 export function getAllArticle () {
-  return getArticlesList()
+  return getAllArticleInfos()
 }
 
 export function getAllArticleIds () {
-  return getAllArticleNames().map(fileName => fileName.replace(/\.mdx?$/, ''))
+  return getAllArticleNames().map(getArticleId).map(transformStrForLink)
 }
 
-export async function getArticleById (id: string) {
-  let source: Buffer
-  if (isFileExist(`${id}.md`)) {
-    source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, `${id}.md`))
-  } else if (isFileExist(`${id}.mdx`)) {
-    source = fs.readFileSync(path.join(ARTICLES_DIRECTORY, `${id}.mdx`))
-  } else {
-    throw new Error('相关文章未找到')
+export async function getArticleById (id: string): Promise<MdxArticle> {
+
+  const allArticleInfos = getAllArticleInfos()
+  const articleInfo = allArticleInfos.find(_ => _.id === id)
+  if (!articleInfo) {
+    return {
+      errMsg: '相关文章未找到'
+    }
   }
 
-  const { content, data } = matter(source)
+  const { content, id: articleId, ...frontMatter } = articleInfo
 
   const localComponents = getLocalComponentsFromMdxContent(content)
 
@@ -93,13 +147,15 @@ export async function getArticleById (id: string) {
         remarkAbbr
       ]
     },
-    scope: data
+    scope: frontMatter
   })
 
   return {
-    source: mdxSource,
-    frontMatter: data,
-    localComponents
+    data: {
+      ...articleInfo,
+      mdxSource,
+      localComponents
+    }
   }
 }
 
@@ -117,22 +173,17 @@ export function getLocalComponentsFromMdxContent (content: string): string[] {
   return components
 }
 
-export function isFileExist (fileName: string) {
-  return fs.existsSync(path.join(ARTICLES_DIRECTORY, fileName))
-}
-
 export function getAllTag () {
-  const articleList = getArticlesList()
-  const tagsList = articleList.map(article => article.tags)
+  const tagsList = getAllArticleInfos().map(article => article.tags)
   return flatten<string>(tagsList)
 }
 
 export function getArticlesByTag (tag: string) {
-  const articleList = getArticlesList()
+  const articleList = getAllArticleInfos()
 
   const filteredList = articleList.filter(({ tags }) => {
-    const searchTag = transformTagForLink(tag)
-    const articleTags = tags.map(transformTagForLink)
+    const searchTag = transformStrForLink(tag)
+    const articleTags = tags.map(transformStrForLink)
     return ~articleTags.indexOf(searchTag)
   })
 
