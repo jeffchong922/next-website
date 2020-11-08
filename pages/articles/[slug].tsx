@@ -1,14 +1,19 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 import hydrate from 'next-mdx-remote/hydrate'
-import { Box } from 'theme-ui'
+import { Box, Flex, Text } from 'theme-ui'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import makeComponents from '../../config/mdxComponents'
 import Layout from '../../layout'
-import { getAllArticleIds, getArticleById, MdxArticle } from '../../libs/articles'
+import { getAllArticleIds, getArticleById } from '../../libs/articles'
 import makeDocTitle from '../../helpers/doc-title'
 import Custom404 from '../404'
 import LoadingPage from '../../components/shared/LoadingPage'
+import ResourceTitle from '../../components/shared/ResourceTitle'
+import BBBox from '../../components/shared/BBBox'
+import NormalLink from '../../components/shared/NormalLink'
+import { transformStrForLink, transformStrForShow } from '../../helpers/name-link'
 
 export type Query = {
   slug: string
@@ -27,6 +32,11 @@ export type FetchError = {
 export type ArticleProps = {
   errMsg: string
   mdxSource: any
+  frontMatter: {
+    title: string
+    tags: string[]
+    image?: string
+  }
   localComponents: string[]
 }
 
@@ -51,15 +61,21 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
   let result: ArticleProps = {
     errMsg: '',
     mdxSource: null,
+    frontMatter: null,
     localComponents: []
   }
   const article = await getArticleById(params.slug)
   if (article.errMsg) {
     result.errMsg = article.errMsg
   } else {
-    const { mdxSource, localComponents } = article.data
+    const { mdxSource, localComponents, title, tags, image } = article.data
     result.mdxSource = mdxSource
     result.localComponents = localComponents
+    result.frontMatter = {
+      title,
+      tags,
+      image
+    }
   }
   
   return {
@@ -68,9 +84,12 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
   }
 }
 
+const defaultImage = '/images/article-image.jpg'
+
 const Article = ({
   errMsg,
   mdxSource,
+  frontMatter,
   localComponents
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
@@ -88,12 +107,49 @@ const Article = ({
   return (
     <Layout showArticleProgress={true}>
       <Head>
-        <title>{makeDocTitle('标题')}</title>
+        <title>{makeDocTitle(frontMatter.title)}</title>
       </Head>
 
-      <Box sx={{ px: ['4', '16', '24'], maxWidth: '5xl' }}>
-        {content}
-      </Box>
+      <Image className='article-image' src={
+        frontMatter.image || defaultImage
+      } width={1920} height={900} layout='responsive' alt='article-image'/>
+
+      <BBBox>
+        <Box sx={{ px: ['4', '16', '24'], maxWidth: '5xl', mb: '20' }}>
+          <h1 style={{ margin: '3.6rem 0', fontSize: '2.8rem' }}>{frontMatter.title}</h1>
+          {content}
+        </Box>
+      </BBBox>
+
+      <ResourceTitle>🔗 相关标签</ResourceTitle>
+      <BBBox>
+        <Flex sx={{ flexWrap: 'wrap', pt: '8' }}>
+          {
+            frontMatter.tags.map(tag => (
+              <Text key={tag} sx={{
+                width: ['1/3', '1/4'],
+                mb: '8',
+                textAlign: 'center', fontSize: ['lg', 'xl'], fontWeight: 'bold',
+                color: 'text',
+                textDecoration: 'underline',
+                transition: 'color .3s',
+                ":hover": {
+                  color: 'primary'
+                }
+              }}>
+                <NormalLink href={`/tags/${transformStrForLink(tag)}`}>#{transformStrForShow(tag)}</NormalLink>
+              </Text>
+            ))
+          }
+        </Flex>
+      </BBBox>
+
+      <style global jsx>{`
+        .article-image {
+          object-fit: cover;
+        }
+      `}</style>
+
     </Layout>
   )
 }

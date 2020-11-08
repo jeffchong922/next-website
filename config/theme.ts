@@ -315,11 +315,12 @@ const theme: Theme = {
     },
     footerIcon: {
       display: 'flex',
+      m: '2',
       justifyContent: 'center', alignItems: 'center',
       color: 'background', bg: 'text',
       width: '2rem', height: '2rem',
       borderRadius: 'full',
-      fontSize: '3rem'
+      fontSize: '1.5rem'
     }
   },
   styles: {
