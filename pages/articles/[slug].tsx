@@ -3,6 +3,7 @@ import hydrate from 'next-mdx-remote/hydrate'
 import { Box, Flex, Text } from 'theme-ui'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import makeComponents from '../../config/mdxComponents'
 import Layout from '../../layout'
 import { getAllArticleIds, getArticleById } from '../../libs/articles'
@@ -34,6 +35,7 @@ export type ArticleProps = {
   frontMatter: {
     title: string
     tags: string[]
+    image?: string
   }
   localComponents: string[]
 }
@@ -66,12 +68,13 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
   if (article.errMsg) {
     result.errMsg = article.errMsg
   } else {
-    const { mdxSource, localComponents, title, tags } = article.data
+    const { mdxSource, localComponents, title, tags, image } = article.data
     result.mdxSource = mdxSource
     result.localComponents = localComponents
     result.frontMatter = {
       title,
-      tags
+      tags,
+      image
     }
   }
   
@@ -80,6 +83,8 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
     revalidate: 1
   }
 }
+
+const defaultImage = '/images/article-image.jpg'
 
 const Article = ({
   errMsg,
@@ -105,9 +110,13 @@ const Article = ({
         <title>{makeDocTitle(frontMatter.title)}</title>
       </Head>
 
+      <Image className='article-image' src={
+        frontMatter.image || defaultImage
+      } width={1920} height={900} layout='responsive' alt='article-image'/>
+
       <BBBox>
-        <Box sx={{ px: ['4', '16', '24'], maxWidth: '5xl' }}>
-          <h1 style={{ marginBottom: '3.6rem', fontSize: '2.8rem' }}>{frontMatter.title}</h1>
+        <Box sx={{ px: ['4', '16', '24'], maxWidth: '5xl', mb: '20' }}>
+          <h1 style={{ margin: '3.6rem 0', fontSize: '2.8rem' }}>{frontMatter.title}</h1>
           {content}
         </Box>
       </BBBox>
@@ -134,6 +143,12 @@ const Article = ({
           }
         </Flex>
       </BBBox>
+
+      <style global jsx>{`
+        .article-image {
+          object-fit: cover;
+        }
+      `}</style>
 
     </Layout>
   )

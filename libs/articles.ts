@@ -16,6 +16,7 @@ export type ArticleMatter = {
   tags?: string[] | string
   date?: string
   desc?: string
+  image?: string
 }
 
 export type ArticleInfo = {
@@ -24,6 +25,7 @@ export type ArticleInfo = {
   tags: string[]
   date: string
   desc: string
+  image: string
   content: string
 }
 
@@ -76,7 +78,7 @@ function getAllArticleInfos (): ArticleInfo[] {
     const source = fileTools.getFileSource(fileName)
 
     const { data, content } = matter(source)
-    const { title, tags, date, desc } = data as ArticleMatter
+    const { title, tags, date, desc, image } = data as ArticleMatter
 
     let articleTags: string[] = []
     if (tags) {
@@ -99,6 +101,7 @@ function getAllArticleInfos (): ArticleInfo[] {
       tags: articleTags,
       date: dateJson,
       desc: desc || '没有找到相关描述',
+      image: image || '',
       content
     }
   })
