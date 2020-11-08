@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import React from 'react'
 import { Text, jsx } from 'theme-ui'
-import { transformTagForLink } from '../../helpers/tag'
+import { transformStrForLink } from '../../helpers/name-link'
 import NormalLink from '../shared/NormalLink'
 
 export type Tag = {
@@ -38,7 +38,7 @@ const TagsTable: React.VFC<TagsTableProps> = ({
                     color: 'primary'
                   }
                 }}>
-                  <NormalLink href={`/tags/${transformTagForLink(tag.name)}`}>#{tag.name}</NormalLink>
+                  <NormalLink href={`/tags/${transformStrForLink(tag.name)}`}>#{tag.name}</NormalLink>
                 </Text>
               </td>
               <td sx={{ px: '6', py: '3', fontSize: 'sm', borderWidth: 'px', borderColor: 'muted', borderBottomStyle: 'solid' }}>{tag.count}</td>

@@ -30,7 +30,8 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
   return {
     props: {
       articles: mapArticles
-    }
+    },
+    revalidate: 1
   }
 }
 
