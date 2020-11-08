@@ -32,3 +32,11 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+public/images/*
+!public/images/home-fixed-bg-black.svg
+!public/images/home-fixed-bg-white.svg
+
+data/*
+!data/articles
+data/articles/*
