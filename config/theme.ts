@@ -313,6 +313,14 @@ const theme: Theme = {
       textTransform: 'uppercase',
       transition: 'color .3s linear 0s',
     },
+    footerIcon: {
+      display: 'flex',
+      justifyContent: 'center', alignItems: 'center',
+      color: 'background', bg: 'text',
+      width: '2rem', height: '2rem',
+      borderRadius: 'full',
+      fontSize: '3rem'
+    }
   },
   styles: {
     root: {
