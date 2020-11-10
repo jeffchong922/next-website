@@ -10,7 +10,7 @@ export type CardProps = {
   desc?: string
 }
 
-const defaultIcon = '/vercel.svg'
+const defaultIcon = '/icon-192x192.png'
 
 const Card: React.FC<CardProps> = ({
   href,
