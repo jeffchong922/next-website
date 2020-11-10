@@ -375,7 +375,11 @@ const theme: Theme = {
       overflow: 'auto',
       borderRadius: '0.3rem',
       '.token-line': {
+        height: '1.5em',
         lineHeight: '1.5em',
+      },
+      '.token-line.active-line': {
+        background: '#022A4B',
       },
     },
     table: {

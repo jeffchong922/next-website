@@ -7,6 +7,7 @@ export type CodeBlockProps = {
   children: string
   className: string
   live?: string
+  line: string
 }
 
 const aliases = {
@@ -14,12 +15,52 @@ const aliases = {
   sh: 'bash',
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({
-  children,
-  className: outerClassName,
-  live,
-  ...otherProps
-}) => {
+/**
+ * 解析高亮代码行号
+ * @param lineInfo 传递的值，{1}、{1, 2}、{1, 2-3, 4}
+ */
+function paseActiveLines (lineInfo: string): number[] {
+  let activeLines: number[] = []
+  const linesPattern = /^\{(.*)\}$/
+  const dashPattern = /^(\d+)\-(\d+)$/
+
+  const linesMatches = linesPattern.exec(lineInfo)
+  
+  if (linesMatches) {
+    activeLines = linesMatches[1].split(',')
+      .reduce<number[]>((arr, nextVal) => {
+        if (dashPattern.test(nextVal)) {  
+          const matches = dashPattern.exec(nextVal)
+          const num1 = parseInt(matches[1])
+          const num2 = parseInt(matches[2])
+          const max = Math.max(num1, num2)
+          let currentMin = Math.min(num1, num2)
+          const storage: number[] = []
+          do {
+            storage.push(currentMin)
+            currentMin++
+          } while (currentMin <= max)
+          return arr.concat(storage)
+        }
+
+        return arr.concat(parseInt(nextVal))
+      }, [])
+  }
+
+  return activeLines
+}
+
+const CodeBlock: React.FC<CodeBlockProps> = (props) => {
+  const {
+    children,
+    className: outerClassName,
+    live = 'false',
+    line = '',
+    ...otherProps
+  } = props
+
+  const activeLines = paseActiveLines(line)
+
   let lang: Language = undefined
   if (outerClassName) {
     const [language] = outerClassName.replace(/language-/, '').split(' ')
@@ -31,9 +72,11 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
       {({ className, style, tokens, getLineProps, getTokenProps}) => (
         <Styled.pre className={`${outerClassName} ${className}`} style={style}>
           {/* 适配父节点 padding 样式 */}
-          <code style={{ display: 'inline-block' }}>
+          <code style={{ display: 'inline-block', minWidth: '100%' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({line, key: i})}>
+              <div key={i} {...getLineProps({line, key: i,
+                className: activeLines.includes(i) ? 'active-line' : ''
+              })}>
                 {line.map((token, key) => (
                   <span style={{ display: 'inline-block' }} key={key} {...getTokenProps({token, key})}/>
                 ))}
