@@ -40,7 +40,8 @@ export const getStaticProps: GetStaticProps<FavoriteProps> = async () => {
   return {
     props: {
       favoriteGroup: mapData
-    }
+    },
+    revalidate: 10,
   }
 }
 
