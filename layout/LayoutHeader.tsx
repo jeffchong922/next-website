@@ -23,10 +23,10 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({
           {/* 菜单 */}
           <Flex css={{ alignItems: 'center'}}>
             {/* pages链接 */}
-            <Flex sx={{ mr: '8' }}>
+            <Flex sx={{ mr: ['2', '4'] }}>
               {
                 Pages.map(page => (
-                  <Box key={page.path} sx={{ mr: '8' }}>
+                  <Box key={page.path} sx={{ mr: ['4', '8'] }}>
                     <HeaderLink href={page.path}>
                       <Text>{page.name}</Text>
                     </HeaderLink>
@@ -36,7 +36,7 @@ const LayoutHeader: React.FC<LayoutHeaderProps> = ({
             </Flex>
 
             {/* 转换主题 */}
-            <Box sx={{ mr: '.9rem' }}>
+            <Box sx={{ mr: ['.4rem', '.9rem'] }}>
               <ThemeToggle/>
             </Box>
 
