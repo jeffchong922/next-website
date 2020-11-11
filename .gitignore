@@ -34,9 +34,11 @@ yarn-error.log*
 .vercel
 
 public/images/*
+!public/images/defaultScreenShort.png
 !public/images/home-fixed-bg-black.svg
 !public/images/home-fixed-bg-white.svg
 
 data/*
+!data/projects.json
 !data/articles
 data/articles/*
