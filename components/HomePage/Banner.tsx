@@ -1,7 +1,7 @@
 import React from 'react'
-import Image from 'next/image'
 import { Box, Flex, Text } from 'theme-ui'
 import BBBox from '../shared/BBBox'
+import CoverImg from '../shared/CoverImg'
 
 const studyTimeMs = 1582992000000
 
@@ -24,7 +24,7 @@ const Banner: React.VFC = () => {
           top: 0, left: 0, right: 0, bottom: 0,
           zIndex: -1,
         }}>
-          <Image className='banner' src='/images/home-banner.jpg' layout='fill' priority={true} alt='banner'/>
+          <CoverImg src='/images/home-banner.jpg' alt='banner'/>
         </Box>
 
         {/* 介绍 */}
@@ -45,9 +45,6 @@ const Banner: React.VFC = () => {
 
       </Box>
       <style global jsx>{`
-        .banner {
-          object-fit: cover;
-        }
         .text {
           text-shadow: 1px 1px 2px #736598;
         }

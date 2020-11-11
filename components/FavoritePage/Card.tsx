@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, Flex, Text } from 'theme-ui'
-import Image from 'next/image'
 import NormalLink from '../shared/NormalLink'
+import CoverImg from '../shared/CoverImg'
 
 export type CardProps = {
   href: string,
@@ -10,7 +10,7 @@ export type CardProps = {
   desc?: string
 }
 
-const defaultIcon = '/icon-192x192.png'
+const defaultIcon = '/images/icon-192x192.png'
 
 const Card: React.FC<CardProps> = ({
   href,
@@ -18,13 +18,7 @@ const Card: React.FC<CardProps> = ({
   name,
   desc
 }) => {
-  const [iconPath, setIconPath] = useState(defaultIcon)
-
-  useEffect(() => {
-    if (icon && !(/https?\:/ig.test(icon))) {
-      setIconPath(icon)
-    }
-  }, [icon])
+  const iconPath = icon || defaultIcon
 
   return (
     <Box sx={{ p: ['4', '6'], height: 'full' }}>
@@ -40,7 +34,7 @@ const Card: React.FC<CardProps> = ({
               height: ['14', '16', '20'],
               overflow: 'hidden',
             }}>
-              <Image className='favorite-logo' src={iconPath} alt={name} width={100} height={100}/>
+              <CoverImg src={iconPath} alt={name}/>
             </Box>
 
             {/* 收藏名 */}
@@ -57,12 +51,6 @@ const Card: React.FC<CardProps> = ({
           }
         </Box>
       </NormalLink>
-
-      <style global jsx>{`
-        .favorite-logo {
-          object-fit: cover;
-        }
-      `}</style>
     </Box>
   )
 }

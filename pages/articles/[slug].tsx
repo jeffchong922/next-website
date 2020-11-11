@@ -3,7 +3,6 @@ import hydrate from 'next-mdx-remote/hydrate'
 import { Box, Flex, Text } from 'theme-ui'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
 import makeComponents from '../../config/mdxComponents'
 import Layout from '../../layout'
 import { getAllArticleIds, getArticleById } from '../../libs/articles'
@@ -14,6 +13,7 @@ import ResourceTitle from '../../components/shared/ResourceTitle'
 import BBBox from '../../components/shared/BBBox'
 import NormalLink from '../../components/shared/NormalLink'
 import { transformStrForLink, transformStrForShow } from '../../helpers/name-link'
+import CoverImg from '../../components/shared/CoverImg'
 
 export type Query = {
   slug: string
@@ -110,10 +110,8 @@ const Article = ({
         <title>{makeDocTitle(frontMatter.title)}</title>
       </Head>
 
-      <Image className='article-image' src={
-        frontMatter.image || defaultImage
-      } width={1920} height={900} layout='responsive' alt='article-image'/>
-
+      <CoverImg src={ frontMatter.image || defaultImage }  alt='article-image'/>
+    
       <BBBox>
         <Box sx={{ px: ['4', '16', '24'], maxWidth: '5xl', mb: '20' }}>
           <h1 style={{ margin: '3.6rem 0', fontSize: '2.8rem' }}>{frontMatter.title}</h1>
@@ -143,13 +141,6 @@ const Article = ({
           }
         </Flex>
       </BBBox>
-
-      <style global jsx>{`
-        .article-image {
-          object-fit: cover;
-        }
-      `}</style>
-
     </Layout>
   )
 }
