@@ -332,38 +332,44 @@ const theme: Theme = {
       textSizeAdjust: '100%',
     },
     h2: {
-      fontFamily: 'heading',
-      fontWeight: 'body',
-      lineHeight: 'heading',
-      m: 0,
-      mb: '8',
-      fontSize: '3xl',
-      mt: '16'
+      m: 0, mb: '8', mt: '16',
+      fontSize: '4xl', color: 'text',
+      ":before": {
+        content: 'close-quote',
+        display: 'block',
+        mt: -'24',
+        height: '24',
+        visibility: 'hidden',
+      }
     },
     h3: {
-      fontFamily: 'heading',
-      fontWeight: 'body',
-      lineHeight: 'heading',
-      m: 0,
-      mb: '8',
+      m: 0, mb: '8',  mt: '12',
       fontSize: '2xl',
-      mt: '12'
+      ":before": {
+        content: 'close-quote',
+        display: 'block',
+        mt: -'24',
+        height: '24',
+        visibility: 'hidden',
+      },
     },
     h4: {
-      fontFamily: 'heading',
-      fontWeight: 'body',
-      lineHeight: 'heading',
-      m: 0,
-      mb: '8',
+      m: 0, mb: '8', mt: '10',
       fontSize: 'xl',
-      mt: '10'
+      ":before": {
+        content: 'close-quote',
+        display: 'block',
+        mt: -'24',
+        height: '24',
+        visibility: 'hidden',
+      },
     },
     p: {
       color: 'text',
       fontFamily: 'monospace',
       fontWeight: 'body',
       lineHeight: 'body',
-      my: '8', wordSpacing: '-.2rem'
+      my: '5', wordSpacing: '-.2rem'
     },
     a: {
       color: '#736598'
@@ -418,7 +424,10 @@ const theme: Theme = {
       pl: '6',
     },
     li: {
-      my: '4'
+      my: '2',
+      '& > p': {
+        m: '0'
+      }
     }
   }
 }

@@ -20,8 +20,7 @@ export const dracula = {
     "color": "rgb(255, 121, 198)"
   },
   ".keyword,.variable": {
-    "color": "rgb(189, 147, 249)",
-    "fontStyle": "italic"
+    "color": "rgb(189, 147, 249)"
   },
   ".comment": {
     "color": "rgb(98, 114, 164)"

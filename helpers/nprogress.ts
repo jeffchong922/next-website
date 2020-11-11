@@ -15,7 +15,6 @@ nProgress.configure({
 export default function useNProgress () {
   // Fires when a route starts to change
   Router.events.on('routeChangeStart', (url) => {
-    console.log(`Loading: ${url}`)
     nProgress.start()
   })
 

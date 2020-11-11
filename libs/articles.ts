@@ -3,6 +3,8 @@ import matter from 'gray-matter'
 import emoji from 'remark-emoji'
 import remarkSubSuper  from 'remark-sub-super'
 import remarkTypograf from '@mavrin/remark-typograf'
+import remarkSlug from 'remark-slug'
+import remarkToc from 'remark-toc'
 import footnotes from 'remark-footnotes'
 import remarkAbbr from 'remark-abbr'
 import renderToString from 'next-mdx-remote/render-to-string'
@@ -133,6 +135,10 @@ export async function getArticleById (id: string): Promise<MdxArticle> {
     components: makeComponents(localComponents),
     mdxOptions: {
       remarkPlugins: [
+        /* 添加 id 锚点 */
+        [remarkSlug],
+        /* 添加 topic */
+        [remarkToc],
         /* 字符表情 */
         [emoji, {
           emoticon: true
