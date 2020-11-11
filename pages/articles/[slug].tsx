@@ -110,7 +110,13 @@ const Article = ({
         <title>{makeDocTitle(frontMatter.title)}</title>
       </Head>
 
-      <CoverImg src={ frontMatter.image || defaultImage }  alt='article-image'/>
+      <Box sx={{
+        width: 'full',
+        height: ['xs', 'md', 'xl', '3xl'],
+        overflow: 'hidden',
+      }}>
+        <CoverImg src={ frontMatter.image || defaultImage }  alt='article-image'/>
+      </Box>
     
       <BBBox>
         <Box sx={{ px: ['4', '16', '24'], maxWidth: '5xl', mb: '20' }}>
