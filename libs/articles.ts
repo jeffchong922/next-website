@@ -12,6 +12,9 @@ import makeComponents from '../config/mdxComponents'
 import { flatten } from '../helpers/fp'
 import makeFileTools from '../helpers/file-tools'
 import { transformStrForLink } from '../helpers/name-link'
+import Prismic from 'prismic-javascript'
+import { makeClient } from '../prismic-configuration'
+import ArticleCard from '../components/shared/ArticleCard'
 
 export type ArticleMatter = {
   title?: string
@@ -31,12 +34,39 @@ export type ArticleInfo = {
   content: string
 }
 
+export type ArticleCard = {
+  id: string
+  title: string
+  tags: string[]
+  desc?: string
+}
+
 export type MdxArticle = {
   errMsg?: string
   data?: ArticleInfo & {
     mdxSource: any
     localComponents: string[]
   }
+}
+
+const prismicClient = makeClient()
+
+export async function getRecentArticles (): Promise<ArticleCard[]> {
+  const fetchResult = await prismicClient.query(
+    Prismic.Predicates.at('document.type', 'md-article'),
+    {
+      pageSize: 3,
+      orderings: '[my.md-article.date desc]',
+      fetch: ['md-article.title', 'md-article.description', 'md-article.tags']
+    }
+  )
+
+  return fetchResult.results.map<ArticleCard>(doc => ({
+    id: doc.uid,
+    title: doc.data.title[0].text,
+    desc: doc.data.description,
+    tags: doc.data.tags.map(({ tag }) => tag.uid)
+  }))
 }
 
 // 文章文件存放路径
@@ -109,7 +139,11 @@ function getAllArticleInfos (): ArticleInfo[] {
   })
 }
 
-export function getAllArticle () {
+export async function getAllArticle () {
+  const data = await prismicClient.query(
+    Prismic.Predicates.at('document.type', 'md-article')
+  )
+  console.log(data)
   return getAllArticleInfos()
 }
 

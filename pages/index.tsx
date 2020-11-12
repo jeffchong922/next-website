@@ -4,7 +4,7 @@ import Banner from "../components/HomePage/Banner";
 import LatestRecords from '../components/HomePage/LatestRecords';
 import ResourceTitle from '../components/shared/ResourceTitle';
 import Layout from "../layout";
-import { getAllArticle } from '../libs/articles';
+import { getRecentArticles } from '../libs/articles';
 
 export type Article = {
   id: string
@@ -19,11 +19,11 @@ export type ArticlesProps = {
 
 export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
   // 三篇文章
-  const articles = getAllArticle().slice(0, 3)
+  const articles = await getRecentArticles()
 
   const mapArticles = articles.map<Article>(article => ({
-    desc: '没有相关文章描述',
     ...article,
+    desc: article.desc || '没有相关文章描述',
     tags: article.tags.length <= 0 ? ['NO TAG'] : article.tags,
   }))
 
