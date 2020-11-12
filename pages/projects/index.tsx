@@ -17,7 +17,7 @@ export type ProjectsProps = {
 }
 
 export const getStaticProps: GetStaticProps<ProjectsProps> = async () => {
-  const data = getProjectsData()
+  const data = await getProjectsData()
 
   // 格式化
   const mapData = data.map<Project>(item => ({
