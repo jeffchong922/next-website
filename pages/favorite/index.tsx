@@ -3,18 +3,12 @@ import Head from 'next/head'
 import Layout from '../../layout'
 import makeDocTitle from '../../helpers/doc-title'
 import ResourceTitle from '../../components/shared/ResourceTitle'
-import FlexGrid from '../../components/shared/FlexGrid'
-import Card from '../../components/FavoritePage/Card'
+import FlexGrid, { Resource } from '../../components/shared/FlexGrid'
+import Card, { CardProps } from '../../components/FavoritePage/Card'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getFavoritesData } from '../../libs/favorites'
 
-export type Favorite = {
-  id: string
-  name: string
-  href: string
-  icon?: string
-  desc?: string
-}
+export type Favorite = CardProps & Resource
 
 export type FavoriteList = {
   title: string
@@ -26,15 +20,12 @@ export type FavoriteProps = {
 }
 
 export const getStaticProps: GetStaticProps<FavoriteProps> = async () => {
-  const data = getFavoritesData()
+  const data = await getFavoritesData()
 
   // 格式化
   const mapData = data.map<FavoriteList>(item => ({
     title: item.category,
-    items: item.items.map<Favorite>(item => ({
-      id: item.name,
-      ...item
-    }))
+    items: item.items
   }))
 
   return {
