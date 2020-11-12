@@ -52,10 +52,18 @@ export type MdxArticle = {
 const prismicClient = makeClient()
 
 export async function getRecentArticles (): Promise<ArticleCard[]> {
+  return await getArticleCardInfos(3)
+}
+
+export async function getAllArticles (): Promise<ArticleCard[]> {
+  return await getArticleCardInfos()
+}
+
+async function getArticleCardInfos (limit: number = 100): Promise<ArticleCard[]> {
   const fetchResult = await prismicClient.query(
     Prismic.Predicates.at('document.type', 'md-article'),
     {
-      pageSize: 3,
+      pageSize: limit,
       orderings: '[my.md-article.date desc]',
       fetch: ['md-article.title', 'md-article.description', 'md-article.tags']
     }

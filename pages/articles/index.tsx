@@ -5,7 +5,7 @@ import makeDocTitle from '../../helpers/doc-title'
 import ResourceTitle from '../../components/shared/ResourceTitle'
 import ResourceNav from '../../components/ArticlesPage/ResourceNav'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getAllArticle } from '../../libs/articles'
+import { getAllArticles } from '../../libs/articles'
 import HighlightLink from '../../components/shared/HighlightLink'
 import ShowArticles from '../../components/ArticlesPage/ShowArticles'
 import { scrollToTop } from '../../helpers/dom'
@@ -21,7 +21,7 @@ export type ArticlesProps = {
 }
 
 export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
-  const articles = getAllArticle()
+  const articles = await getAllArticles()
 
   const mapArticles = articles.map<Article>(article => ({
     ...article,
