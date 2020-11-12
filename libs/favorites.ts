@@ -28,7 +28,8 @@ export async function getFavoritesData (): Promise<Array<FavoriteData>>  {
     const favorites = await prismicClient.query([
       Prismic.Predicates.at('document.type', 'favorite'),
       Prismic.Predicates.at('my.favorite.categories.category', category.id)
-    ])
+    ], { orderings: '[document.last_publication_date]' })
+    
     const items = favorites.results.map<FavoriteItem>(favorite => ({
       id: favorite.id,
       href: favorite.data.href.url,
