@@ -1,11 +1,10 @@
 import React from 'react'
-import { Article } from '../../pages/articles'
+import ArticleCard, { ArticleCardProps } from '../shared/ArticleCard'
 import FlexGrid from '../shared/FlexGrid'
-import Card from './Card'
-import NoResource from './NoResource'
+import NoResource from '../shared/NoResource'
 
 export type ShowArticlesProps = {
-  articles: Article[]
+  articles: ArticleCardProps[]
 }
 
 const ShowArticles: React.VFC<ShowArticlesProps> = ({
@@ -16,7 +15,7 @@ const ShowArticles: React.VFC<ShowArticlesProps> = ({
       {
         articles.length <= 0
           ? <NoResource/>
-          : <FlexGrid RenderItem={Card} resources={articles}/>
+          : <FlexGrid RenderItem={ArticleCard} resources={articles}/>
       }
     </div>
   )

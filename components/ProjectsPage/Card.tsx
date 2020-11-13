@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Text } from 'theme-ui'
 import NormalLink from '../shared/NormalLink'
-import CoverImg from '../shared/CoverImg'
+import NextCoverImage from '../shared/NextCoverImg'
 
 export type CardProps = {
   href: string,
@@ -11,8 +11,6 @@ export type CardProps = {
   desc?: string
 }
 
-const defaultScreenShort = '/images/defaultScreenShort.png'
-
 const Card: React.FC<CardProps> = ({
   href,
   title,
@@ -20,7 +18,6 @@ const Card: React.FC<CardProps> = ({
   skill,
   desc
 }) => {
-  const iconPath = screenShort || defaultScreenShort
 
   return (
     <Box sx={{ p: '8', height: 'full' }}>
@@ -35,7 +32,7 @@ const Card: React.FC<CardProps> = ({
               height: ['3xs', '2xs', 'xs'],
               mb: ['4', '6'],
             }}>
-              <CoverImg src={iconPath} alt={title}/>
+              <NextCoverImage src={screenShort} alt={title}/>
             </Box>
 
             {/* Title & Skill */}

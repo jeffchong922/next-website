@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Text } from 'theme-ui'
 import NormalLink from '../shared/NormalLink'
-import CoverImg from '../shared/CoverImg'
+import NextCoverImage from '../shared/NextCoverImg'
 
 export type CardProps = {
   href: string,
@@ -10,16 +10,12 @@ export type CardProps = {
   desc?: string
 }
 
-const defaultIcon = '/images/icon-192x192.png'
-
 const Card: React.FC<CardProps> = ({
   href,
   icon,
   name,
   desc
 }) => {
-  const iconPath = icon || defaultIcon
-
   return (
     <Box sx={{ p: ['4', '6'], height: 'full' }}>
       <NormalLink href={href}>
@@ -34,7 +30,7 @@ const Card: React.FC<CardProps> = ({
               height: ['14', '16', '20'],
               overflow: 'hidden',
             }}>
-              <CoverImg src={iconPath} alt={name}/>
+              <NextCoverImage src={icon} alt={name}/>
             </Box>
 
             {/* 收藏名 */}

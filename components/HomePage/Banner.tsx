@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Text } from 'theme-ui'
 import BBBox from '../shared/BBBox'
-import CoverImg from '../shared/CoverImg'
+import NextCoverImage from '../shared/NextCoverImg'
 
 const studyTimeMs = 1582992000000
 
@@ -13,7 +13,9 @@ function getDistanceTime () {
   return `${year === 0 ? '' : year + '年 '}${month}个月`
 }
 
-const Banner: React.VFC = () => {
+const Banner: React.VFC<{bannerImg: string}> = ({
+  bannerImg
+}) => {
   return (
     <BBBox>
       <Box sx={{ position: 'relative', height: ['32rem', '43rem'] }}>
@@ -24,7 +26,7 @@ const Banner: React.VFC = () => {
           top: 0, left: 0, right: 0, bottom: 0,
           zIndex: -1,
         }}>
-          <CoverImg src='/images/home-banner.jpg' alt='banner'/>
+          <NextCoverImage src={bannerImg} alt='banner'/>
         </Box>
 
         {/* 介绍 */}
