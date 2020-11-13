@@ -100,18 +100,23 @@ export async function getUniqueTags (): Promise<string[]> {
 }
 
 export async function getArticlesByTagUid (uid: string): Promise<ArticleCard[]> {
-  const tagDoc = await prismicClient.getByUID('article-tag', uid, {})
-  const fetchResult = await prismicClient.query(
-    [
-      Prismic.Predicates.at('document.type', 'md-article'),
-      Prismic.Predicates.at('my.md-article.tags.tag', tagDoc.id)
-    ],
-    {
-      orderings: '[my.md-article.date desc]',
-      fetch: ['md-article.title', 'md-article.description', 'md-article.tags']
-    }
-  )
-  return fetchResult.results.map<ArticleCard>(getArticleCardInfo)
+  try {
+    const tagDoc = await prismicClient.getByUID('article-tag', uid, {})
+    const fetchResult = await prismicClient.query(
+      [
+        Prismic.Predicates.at('document.type', 'md-article'),
+        Prismic.Predicates.at('my.md-article.tags.tag', tagDoc.id)
+      ],
+      {
+        orderings: '[my.md-article.date desc]',
+        fetch: ['md-article.title', 'md-article.description', 'md-article.tags']
+      }
+    )
+    return fetchResult.results.map<ArticleCard>(getArticleCardInfo)
+  } catch (e) {
+    console.log('fetchTagError', JSON.stringify(e, null, 2))
+    return []
+  }
 }
 
 async function parseRawMD2Html (content: string) {
