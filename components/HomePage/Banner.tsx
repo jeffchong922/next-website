@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Text } from 'theme-ui'
 import BBBox from '../shared/BBBox'
-import NextCoverImage from '../shared/NextCoverImg'
+import CoverImg from '../shared/CoverImg'
 
 const studyTimeMs = 1582992000000
 
@@ -26,7 +26,7 @@ const Banner: React.VFC<{bannerImg: string}> = ({
           top: 0, left: 0, right: 0, bottom: 0,
           zIndex: -1,
         }}>
-          <NextCoverImage src={bannerImg} alt='banner'/>
+          <CoverImg src={bannerImg} alt='banner'/>
         </Box>
 
         {/* 介绍 */}

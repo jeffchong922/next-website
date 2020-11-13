@@ -29,13 +29,13 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
   }))
 
   const homeDoc = await makeClient().getSingle('home-page', {
-    fetch: ['home-page.banner']
+    fetch: ['home-page.banner-path']
   })
 
   return {
     props: {
       articles: mapArticles,
-      bannerImg: homeDoc.data.banner.url || '/images/home-banner.jpg'
+      bannerImg: homeDoc.data['banner-path'] || '/images/home-banner.jpg'
     },
     revalidate: 1
   }

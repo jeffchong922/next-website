@@ -13,7 +13,7 @@ import ResourceTitle from '../../components/shared/ResourceTitle'
 import BBBox from '../../components/shared/BBBox'
 import NormalLink from '../../components/shared/NormalLink'
 import { transformStrForLink, transformStrForShow } from '../../helpers/name-link'
-import NextCoverImage from '../../components/shared/NextCoverImg'
+import CoverImg from '../../components/shared/CoverImg'
 
 export type Query = {
   slug: string
@@ -107,7 +107,7 @@ const Article = ({
         height: ['xs', 'md', 'xl', '3xl'],
         overflow: 'hidden',
       }}>
-        <NextCoverImage src={ frontMatter.image }  alt='article-image'/>
+        <CoverImg src={frontMatter.image} alt='article-image'/>
       </Box>
     
       <BBBox>

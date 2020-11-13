@@ -73,7 +73,7 @@ export async function getArticleByUid (uid: string, preview: boolean, previewDat
   const parsed = await parseRawMD2Html(articleDoc.data.content[0].text)
   return {
     description: articleDoc.data.description,
-    topImg: articleDoc.data['top-img'].url,
+    topImg: articleDoc.data['top-img-path'],
     title: articleDoc.data.title[0].text,
     date: articleDoc.data.date,
     tags: articleDoc.data.tags.map(({ tag }) => tag.uid),

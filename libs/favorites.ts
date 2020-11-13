@@ -33,7 +33,7 @@ export async function getFavoritesData (): Promise<Array<FavoriteData>>  {
     const items = favorites.results.map<FavoriteItem>(favorite => ({
       id: favorite.id,
       href: favorite.data.href.url,
-      icon: favorite.data.icon.url,
+      icon: favorite.data['icon-path'],
       name: favorite.data.name,
       desc: favorite.data.description,
     }))

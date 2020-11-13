@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Text } from 'theme-ui'
+import CoverImg from '../shared/CoverImg'
 import NormalLink from '../shared/NormalLink'
-import NextCoverImage from '../shared/NextCoverImg'
 
 export type CardProps = {
   href: string,
@@ -32,7 +32,7 @@ const Card: React.FC<CardProps> = ({
               height: ['3xs', '2xs', 'xs'],
               mb: ['4', '6'],
             }}>
-              <NextCoverImage src={screenShort} alt={title}/>
+              <CoverImg src={screenShort} alt={title}/>
             </Box>
 
             {/* Title & Skill */}
