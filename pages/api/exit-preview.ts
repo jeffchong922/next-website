@@ -1,0 +1,9 @@
+import { NextApiRequest, NextApiResponse } from "next";
+
+export default async function preview (req: NextApiRequest, res: NextApiResponse) {
+  res.clearPreviewData()
+
+  res.writeHead(307, { Location: '/' })
+  
+  res.end()
+}

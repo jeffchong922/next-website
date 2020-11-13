@@ -65,8 +65,11 @@ export async function getArticlesUid (): Promise<string[]> {
   return fetchResult.results.map<string>(doc => doc.uid)
 }
 
-export async function getArticleByUid (uid: string): Promise<Article> {
-  const articleDoc = await prismicClient.getByUID('md-article', uid, {})
+export async function getArticleByUid (uid: string, preview: boolean, previewData?: { ref: string }): Promise<Article> {
+  const options = preview
+    ? { ref: previewData.ref }
+    : {}
+  const articleDoc = await prismicClient.getByUID('md-article', uid, options)
   const parsed = await parseRawMD2Html(articleDoc.data.content[0].text)
   return {
     description: articleDoc.data.description,

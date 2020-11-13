@@ -28,6 +28,7 @@ export type ArticleProps = {
     image?: string
   }
   localComponents: string[]
+  previewMode: boolean
 }
 
 export const getStaticPaths: GetStaticPaths<Query> = async () => {
@@ -46,16 +47,19 @@ export const getStaticPaths: GetStaticPaths<Query> = async () => {
 }
 
 export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
-  params
+  params,
+  preview = false,
+  previewData
 }) => {
   let result: ArticleProps = {
     errMsg: '',
     mdxSource: null,
     frontMatter: null,
-    localComponents: []
+    localComponents: [],
+    previewMode: preview
   }
   try {
-    const { data: { mdxSource, localComponents }, title, tags, topImg: image } = await getArticleByUid(params.slug)
+    const { data: { mdxSource, localComponents }, title, tags, topImg: image } = await getArticleByUid(params.slug, preview, previewData)
     result.mdxSource = mdxSource
     result.localComponents = localComponents
     result.frontMatter = {
@@ -77,7 +81,8 @@ const Article = ({
   errMsg,
   mdxSource,
   frontMatter,
-  localComponents
+  localComponents,
+  previewMode
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
   if (router.isFallback) {
@@ -134,6 +139,14 @@ const Article = ({
           }
         </Flex>
       </BBBox>
+
+      {previewMode && (
+        <Box sx={{
+          position: 'fixed', bottom: '4', right: '4',
+          maxHeight: '50vh', maxWidth: '50vw', p: '2',
+          bg: 'rgba(122,122,122, 0.75)', color: '#eee' , borderRadius: 'lg',
+        }}>当前处于预览模式 <a href='/api/exit-preview' style={{ color: 'rgb(0,0,123)' }}>退出预览</a></Box>
+      )}
     </Layout>
   )
 }
