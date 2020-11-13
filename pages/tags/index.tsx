@@ -4,8 +4,9 @@ import Layout from '../../layout'
 import makeDocTitle from '../../helpers/doc-title'
 import ResourceTitle from '../../components/shared/ResourceTitle'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getAllTag } from '../../libs/articles'
+import { getAllArticleTags } from '../../libs/articles'
 import TagsTable from '../../components/TagsPage/TagsTable'
+import { transformStrForShow } from '../../helpers/name-link'
 
 export type Tag = {
   name: string
@@ -17,7 +18,7 @@ export type TagsProps = {
 }
 
 export const getStaticProps: GetStaticProps<TagsProps> = async () => {
-  const sortedTags = getAllTag().map(tag => tag.toUpperCase()).sort()
+  const sortedTags = (await getAllArticleTags()).map(transformStrForShow).sort()
 
   // 集成
   const tags: Tag[] = []

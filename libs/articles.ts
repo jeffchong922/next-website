@@ -1,5 +1,3 @@
-import path from 'path'
-import matter from 'gray-matter'
 import emoji from 'remark-emoji'
 import remarkSubSuper  from 'remark-sub-super'
 import remarkTypograf from '@mavrin/remark-typograf'
@@ -10,29 +8,10 @@ import remarkAbbr from 'remark-abbr'
 import renderToString from 'next-mdx-remote/render-to-string'
 import makeComponents from '../config/mdxComponents'
 import { flatten } from '../helpers/fp'
-import makeFileTools from '../helpers/file-tools'
-import { transformStrForLink } from '../helpers/name-link'
 import Prismic from 'prismic-javascript'
 import { makeClient } from '../prismic-configuration'
 import ArticleCard from '../components/shared/ArticleCard'
-
-export type ArticleMatter = {
-  title?: string
-  tags?: string[] | string
-  date?: string
-  desc?: string
-  image?: string
-}
-
-export type ArticleInfo = {
-  id: string
-  title: string
-  tags: string[]
-  date: string
-  desc: string
-  image: string
-  content: string
-}
+import { Document } from 'prismic-javascript/types/documents'
 
 export type ArticleCard = {
   id: string
@@ -41,9 +20,13 @@ export type ArticleCard = {
   desc?: string
 }
 
-export type MdxArticle = {
-  errMsg?: string
-  data?: ArticleInfo & {
+export type Article = {
+  description?: string
+  topImg: string
+  title: string
+  date: string
+  tags: string[]
+  data: {
     mdxSource: any
     localComponents: string[]
   }
@@ -69,108 +52,66 @@ async function getArticleCardInfos (limit: number = 100): Promise<ArticleCard[]>
     }
   )
 
-  return fetchResult.results.map<ArticleCard>(doc => ({
-    id: doc.uid,
-    title: doc.data.title[0].text,
-    desc: doc.data.description,
-    tags: doc.data.tags.map(({ tag }) => tag.uid)
-  }))
+  return fetchResult.results.map<ArticleCard>(getArticleCardInfo)
 }
 
-// 文章文件存放路径
-const ARTICLES_DIRECTORY = path.join(process.cwd(), 'data/articles')
-
-const fileTools = makeFileTools(ARTICLES_DIRECTORY)
-
-/**
- * 文章文件过滤
- * @param fileName 文件名
- */
-function articleFileFilter (fileName: string) {
-  return /\.mdx?$/.test(fileName)
-}
-
-/**
- * 从文件名获取相应id值
- * @param fileName 文件名
- */
-function getArticleId (fileName: string) {
-  return fileName.replace(/\.mdx?$/, '')
-}
-
-/**
- * 获取所有文章文件名
- */
-function getAllArticleNames () {
-  return fileTools.getAllFileNames()
-  .filter(articleFileFilter)
-}
-
-/**
- * 获取所有文章信息
- */
-function getAllArticleInfos (): ArticleInfo[] {
-  const fileNames = getAllArticleNames()
-
-  return fileNames.map(fileName => {
-    const id = getArticleId(fileName)
-    
-    const source = fileTools.getFileSource(fileName)
-
-    const { data, content } = matter(source)
-    const { title, tags, date, desc, image } = data as ArticleMatter
-
-    let articleTags: string[] = []
-    if (tags) {
-      typeof tags === 'string'
-        ? articleTags.push(tags)
-        : articleTags.push(...tags)
+export async function getArticlesUid (): Promise<string[]> {
+  const fetchResult = await prismicClient.query(
+    Prismic.Predicates.at('document.type', 'md-article'),
+    {
+      fetch: ['md-article.date']
     }
-    else {
-      articleTags.push('NO TAG')
-    }
-
-    let dateJson = new Date(date).toJSON()
-    if (!dateJson) {
-      dateJson = new Date().toJSON()
-    }
-
-    return {
-      id: transformStrForLink(id),
-      title: title || id,
-      tags: articleTags,
-      date: dateJson,
-      desc: desc || '没有找到相关描述',
-      image: image || '',
-      content
-    }
-  })
-}
-
-export async function getAllArticle () {
-  const data = await prismicClient.query(
-    Prismic.Predicates.at('document.type', 'md-article')
   )
-  console.log(data)
-  return getAllArticleInfos()
+  return fetchResult.results.map<string>(doc => doc.uid)
 }
 
-export function getAllArticleIds () {
-  return getAllArticleNames().map(getArticleId).map(transformStrForLink)
-}
-
-export async function getArticleById (id: string): Promise<MdxArticle> {
-
-  const allArticleInfos = getAllArticleInfos()
-  const articleInfo = allArticleInfos.find(_ => _.id === id)
-  if (!articleInfo) {
-    return {
-      errMsg: '相关文章未找到'
-    }
+export async function getArticleByUid (uid: string): Promise<Article> {
+  const articleDoc = await prismicClient.getByUID('md-article', uid, {})
+  const parsed = await parseRawMD2Html(articleDoc.data.content[0].text)
+  return {
+    description: articleDoc.data.description,
+    topImg: articleDoc.data['top-img'].url,
+    title: articleDoc.data.title[0].text,
+    date: articleDoc.data.date,
+    tags: articleDoc.data.tags.map(({ tag }) => tag.uid),
+    data: parsed.data
   }
+}
 
-  const { content, id: articleId, ...frontMatter } = articleInfo
+export async function getAllArticleTags (): Promise<string[]> {
+  const fetchResult = await prismicClient.query(
+    Prismic.Predicates.at('document.type', 'md-article'),
+    {
+      fetch: ['md-article.tags']
+    }
+  )
+  const tags = fetchResult.results.map<string[]>(doc => doc.data.tags.map(({ tag }) => tag.uid))
+  return flatten<string>(tags)
+}
 
+export async function getUniqueTags (): Promise<string[]> {
+  const fetchResult = await prismicClient.query(
+    Prismic.Predicates.at('document.type', 'article-tag')
+  )
+  return fetchResult.results.map(doc => doc.uid)
+}
+
+export async function getArticlesByTagUid (uid: string): Promise<ArticleCard[]> {
+  const tagDoc = await prismicClient.getByUID('article-tag', uid, {})
+  const fetchResult = await prismicClient.query(
+    [
+      Prismic.Predicates.at('document.type', 'md-article'),
+      Prismic.Predicates.at('my.md-article.tags.tag', tagDoc.id)
+    ],
+    {
+      orderings: '[my.md-article.date desc]',
+      fetch: ['md-article.title', 'md-article.description', 'md-article.tags']
+    }
+  )
+  return fetchResult.results.map<ArticleCard>(getArticleCardInfo)
+}
+
+async function parseRawMD2Html (content: string) {
   const localComponents = getLocalComponentsFromMdxContent(content)
 
   const mdxSource = await renderToString(content, {
@@ -197,20 +138,18 @@ export async function getArticleById (id: string): Promise<MdxArticle> {
         }],
         remarkAbbr
       ]
-    },
-    scope: frontMatter
+    }
   })
 
   return {
     data: {
-      ...articleInfo,
       mdxSource,
       localComponents
     }
   }
 }
 
-export function getLocalComponentsFromMdxContent (content: string): string[] {
+function getLocalComponentsFromMdxContent (content: string): string[] {
   const codeBlockReg = /^\`\`\`(.|\n|\r)*?\`\`\`$/img
   const localComponentReg = /\<([A-Z].*?)\/\>/g
 
@@ -220,23 +159,14 @@ export function getLocalComponentsFromMdxContent (content: string): string[] {
   const components = Array.from(matches, m => m[1].trim())
     .filter((c, idx, cs) => cs.findIndex(_ => _ === c) === idx)
 
-  console.log('getLocalComponents() : ', components)
   return components
 }
 
-export function getAllTag () {
-  const tagsList = getAllArticleInfos().map(article => article.tags)
-  return flatten<string>(tagsList)
-}
-
-export function getArticlesByTag (tag: string) {
-  const articleList = getAllArticleInfos()
-
-  const filteredList = articleList.filter(({ tags }) => {
-    const searchTag = transformStrForLink(tag)
-    const articleTags = tags.map(transformStrForLink)
-    return ~articleTags.indexOf(searchTag)
-  })
-
-  return filteredList
+function getArticleCardInfo (doc: Document) {
+  return {
+    id: doc.uid,
+    title: doc.data.title[0].text,
+    desc: doc.data.description,
+    tags: doc.data.tags.map(({ tag }) => tag.uid)
+  }
 }

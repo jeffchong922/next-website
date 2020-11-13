@@ -3,11 +3,11 @@ import React from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Layout from '../../layout'
-import { getAllTag, getArticlesByTag } from '../../libs/articles'
+import { getUniqueTags, getArticlesByTagUid } from '../../libs/articles'
 import makeDocTitle from '../../helpers/doc-title'
 import ResourceTitle from '../../components/shared/ResourceTitle'
 import HighlightLink from '../../components/shared/HighlightLink'
-import { transformStrForShow, transformStrForLink } from '../../helpers/name-link'
+import { transformStrForShow } from '../../helpers/name-link'
 import ShowArticles from '../../components/ArticlesPage/ShowArticles'
 import LoadingPage from '../../components/shared/LoadingPage'
 
@@ -27,7 +27,7 @@ export type TagRelatedProps = {
 }
 
 export const getStaticPaths: GetStaticPaths<Query> = async () => {
-  const tags = getAllTag().map(transformStrForLink).sort().filter((tag, idx, tags) => tag !== tags[idx+1])
+  const tags = await getUniqueTags()
   const paths = tags.map(tag => ({
     params: {
       slug: tag
@@ -42,7 +42,7 @@ export const getStaticPaths: GetStaticPaths<Query> = async () => {
 export const getStaticProps: GetStaticProps<TagRelatedProps, Query> = async ({
   params
 }) => {
-  const articles = getArticlesByTag(params.slug)
+  const articles = await getArticlesByTagUid(params.slug)
   return {
     props: {
       tag: transformStrForShow(params.slug),

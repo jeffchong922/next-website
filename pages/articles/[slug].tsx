@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import makeComponents from '../../config/mdxComponents'
 import Layout from '../../layout'
-import { getAllArticleIds, getArticleById } from '../../libs/articles'
+import { getArticleByUid, getArticlesUid } from '../../libs/articles'
 import makeDocTitle from '../../helpers/doc-title'
 import Custom404 from '../404'
 import LoadingPage from '../../components/shared/LoadingPage'
@@ -13,21 +13,11 @@ import ResourceTitle from '../../components/shared/ResourceTitle'
 import BBBox from '../../components/shared/BBBox'
 import NormalLink from '../../components/shared/NormalLink'
 import { transformStrForLink, transformStrForShow } from '../../helpers/name-link'
-import CoverImg from '../../components/shared/CoverImg'
+import NextCoverImage from '../../components/shared/NextCoverImg'
 
 export type Query = {
   slug: string
 }
-
-export type FetchSuccess = {
-  mdxSource: any
-  localComponents: string[]
-}
-
-export type FetchError = {
-  error: Error
-}
-
 
 export type ArticleProps = {
   errMsg: string
@@ -41,7 +31,7 @@ export type ArticleProps = {
 }
 
 export const getStaticPaths: GetStaticPaths<Query> = async () => {
-  const ids = getAllArticleIds()
+  const ids = await getArticlesUid()
 
   const paths = ids.map(id => ({
     params: {
@@ -64,11 +54,8 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
     frontMatter: null,
     localComponents: []
   }
-  const article = await getArticleById(params.slug)
-  if (article.errMsg) {
-    result.errMsg = article.errMsg
-  } else {
-    const { mdxSource, localComponents, title, tags, image } = article.data
+  try {
+    const { data: { mdxSource, localComponents }, title, tags, topImg: image } = await getArticleByUid(params.slug)
     result.mdxSource = mdxSource
     result.localComponents = localComponents
     result.frontMatter = {
@@ -76,6 +63,8 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
       tags,
       image
     }
+  } catch (e) {
+    result.errMsg = e.message
   }
   
   return {
@@ -83,8 +72,6 @@ export const getStaticProps: GetStaticProps<ArticleProps, Query> = async ({
     revalidate: 1
   }
 }
-
-const defaultImage = '/images/article-image.jpg'
 
 const Article = ({
   errMsg,
@@ -115,7 +102,7 @@ const Article = ({
         height: ['xs', 'md', 'xl', '3xl'],
         overflow: 'hidden',
       }}>
-        <CoverImg src={ frontMatter.image || defaultImage }  alt='article-image'/>
+        <NextCoverImage src={ frontMatter.image }  alt='article-image'/>
       </Box>
     
       <BBBox>
