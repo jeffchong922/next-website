@@ -78,7 +78,7 @@ const CodeBlock: React.FC<CodeBlockProps> = (props) => {
       <div style={{}}>
         <LiveProvider code={children.trim()} theme={dracula}>
           <LiveEditor style={{ backgroundColor: '#011627' }}/>
-          <LiveError style={{ border: '1px solid #011627', borderTop: 'none', borderBottom: 'none', backgroundColor: '#d00', color: 'white', padding: '0.5rem', margin: '0' }}/>
+          <LiveError style={{ whiteSpace: 'pre-wrap', border: '1px solid #011627', borderTop: 'none', borderBottom: 'none', backgroundColor: '#d00', color: 'white', padding: '0.5rem', margin: '0' }}/>
           <LivePreview style={{ border: '1px solid #011627', borderTop: 'none', padding: '0.5rem' }}/>
         </LiveProvider>
       </div>
