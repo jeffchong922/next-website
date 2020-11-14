@@ -1,10 +1,13 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
 // https://github.com/mdx-js/mdx/blob/master/examples/syntax-highlighting/src/components/CodeBlock.js
+import dynamic from 'next/dynamic'
 import HighLight, { defaultProps, Language } from 'prism-react-renderer'
 import dracula from 'prism-react-renderer/themes/dracula'
-import { Styled, jsx } from 'theme-ui'
-import { LivePreview, LiveEditor, LiveError, LiveProvider } from 'react-live'
+import { Styled } from 'theme-ui'
+
+const LivePreview = dynamic(() => import('react-live').then(mode => mode.LivePreview))
+const LiveEditor = dynamic(() => import('react-live').then(mode => mode.LiveEditor))
+const LiveError = dynamic(() => import('react-live').then(mode => mode.LiveError))
+const LiveProvider = dynamic(() => import('react-live').then(mode => mode.LiveProvider))
 
 export type CodeBlockProps = {
   children: string
