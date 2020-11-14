@@ -18,6 +18,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-icons": "^3.11.0",
+    "react-live": "^2.2.3",
     "remark-abbr": "^1.4.0",
     "remark-emoji": "^2.1.0",
     "remark-footnotes": "^3.0.0",

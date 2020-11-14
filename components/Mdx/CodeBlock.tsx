@@ -1,7 +1,10 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
 // https://github.com/mdx-js/mdx/blob/master/examples/syntax-highlighting/src/components/CodeBlock.js
-
 import HighLight, { defaultProps, Language } from 'prism-react-renderer'
-import { Styled } from 'theme-ui'
+import dracula from 'prism-react-renderer/themes/dracula'
+import { Styled, jsx } from 'theme-ui'
+import { LivePreview, LiveEditor, LiveError, LiveProvider } from 'react-live'
 
 export type CodeBlockProps = {
   children: string
@@ -65,6 +68,18 @@ const CodeBlock: React.FC<CodeBlockProps> = (props) => {
   if (outerClassName) {
     const [language] = outerClassName.replace(/language-/, '').split(' ')
     lang = (aliases[language] || language) as Language
+  }
+
+  if (live === 'true') {
+    return (
+      <div style={{}}>
+        <LiveProvider code={children.trim()} theme={dracula}>
+          <LiveEditor style={{ backgroundColor: '#011627' }}/>
+          <LiveError style={{ border: '1px solid #011627', borderTop: 'none', borderBottom: 'none', backgroundColor: '#d00', color: 'white', padding: '0.5rem', margin: '0' }}/>
+          <LivePreview style={{ border: '1px solid #011627', borderTop: 'none', padding: '0.5rem' }}/>
+        </LiveProvider>
+      </div>
+    )
   }
 
   return (
