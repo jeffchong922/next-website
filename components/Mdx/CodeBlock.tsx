@@ -13,7 +13,8 @@ export type CodeBlockProps = {
   children: string
   className: string
   live?: string
-  line: string
+  line?: string
+  render?: string
 }
 
 const aliases = {
@@ -62,6 +63,7 @@ const CodeBlock: React.FC<CodeBlockProps> = (props) => {
     className: outerClassName,
     live = 'false',
     line = '',
+    render = 'false',
     ...otherProps
   } = props
 
@@ -76,7 +78,7 @@ const CodeBlock: React.FC<CodeBlockProps> = (props) => {
   if (live === 'true') {
     return (
       <div style={{}}>
-        <LiveProvider code={children.trim()} theme={dracula}>
+        <LiveProvider code={children.trim()} theme={dracula} noInline={render === 'true'}>
           <LiveEditor style={{ backgroundColor: '#011627' }}/>
           <LiveError style={{ whiteSpace: 'pre-wrap', border: '1px solid #011627', borderTop: 'none', borderBottom: 'none', backgroundColor: '#d00', color: 'white', padding: '0.5rem', margin: '0' }}/>
           <LivePreview style={{ border: '1px solid #011627', borderTop: 'none', padding: '0.5rem' }}/>
